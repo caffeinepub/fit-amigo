@@ -1,23 +1,22 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T14:16:33.324Z",
-  "summary": "The implementation successfully integrates external APIs for sports products and fitness videos. All 10 requirements (REQ-57 through REQ-66) are fully implemented with proper backend methods, React Query hooks, updated UI components, and comprehensive configuration documentation. The diff shows complete end-to-end implementation following existing patterns.",
-  "missing_requirements": [],
+  "generatedAt": "2026-02-20T15:06:21.672Z",
+  "summary": "The diff implements 4 out of 5 requirements. REQ-67, REQ-68, REQ-70, and REQ-71 are fully implemented with mock data, search functionality, and proper documentation. REQ-69 (FiTube page updates) is missing - the FiTube.tsx page file was not modified to integrate the mock video data or maintain existing video upload functionality.",
+  "missing_requirements": [
+    {
+      "id": "REQ-69",
+      "requirement": "Remove external API dependencies from FiTube page (frontend/src/pages/FiTube.tsx) and replace useGetExternalFitnessVideos hook with local mock data. Videos should display in grid layout with thumbnails, titles, uploader names, and view counts. Video cards should be clickable. Existing video upload functionality must remain intact for internal videos.",
+      "reason": "The FiTube.tsx page file is not present in the diff. While the useGetExternalFitnessVideos hook was updated with mock data (REQ-71), the FiTube page itself was not modified to consume this mock data or ensure the existing video upload functionality remains intact.",
+      "evidence": []
+    }
+  ],
   "hallucinated_features": [],
-  "confidence": 0.95,
+  "confidence": 0.85,
   "changed_files": [
-    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/.env.example",
-    "frontend/README.md",
-    "frontend/src/components/ProductCard.tsx",
-    "frontend/src/components/ProductFilters.tsx",
-    "frontend/src/components/VideoCard.tsx",
-    "frontend/src/config/api.ts",
     "frontend/src/hooks/useGetExternalFitnessVideos.ts",
     "frontend/src/hooks/useGetExternalSportsProducts.ts",
-    "frontend/src/pages/FiTube.tsx",
     "frontend/src/pages/Store.tsx",
     "project_state.json"
   ]

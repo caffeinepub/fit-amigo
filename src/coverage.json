@@ -1,25 +1,49 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T14:16:33.330Z",
+  "generatedAt": "2026-02-20T15:06:21.681Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 10,
-    "implemented": 8,
+    "total": 5,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-57",
-        "summary": "Create backend method in main.mo to fetch external sports products (gym equipment, running gear, sports apparel, supplements) from a configurable external API endpoint. The method should accept optional category and search filters, call the external API with proper error handling, parse the JSON response, and return an array of products with fields: id, name, description, price, imageUrl, category, and externalProductUrl. Follow the same pattern as the existing fetchExternalProducts method for Go Store API.",
-        "status": "unknown",
-        "plannedFiles": [],
+        "id": "REQ-67",
+        "summary": "Remove external API dependencies from Store page (frontend/src/pages/Store.tsx) and replace useGetExternalSportsProducts hook with local mock data containing realistic sports products across categories: gym equipment (dumbbells, barbells, resistance bands, kettlebells), running gear (running shoes, GPS watches, hydration packs), sports apparel (workout shirts, shorts, leggings, jackets), and supplements (protein powder, pre-workout, BCAAs, vitamins). Each mock product should include: id, name, description, price, imageUrl (placeholder or stock image URL), category, and externalProductUrl fields.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/Store.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/Store.tsx"
+        ]
+      },
+      {
+        "id": "REQ-68",
+        "summary": "Add a search input field at the top of the Store page (frontend/src/pages/Store.tsx) that allows users to filter displayed products by name or description in real-time. Implement client-side search filtering that updates the visible products as the user types, with debouncing (300ms delay) to improve performance. The search should work seamlessly with existing category and price filters.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/Store.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/Store.tsx"
+        ]
+      },
+      {
+        "id": "REQ-69",
+        "summary": "Remove external API dependencies from FiTube page (frontend/src/pages/FiTube.tsx) and replace useGetExternalFitnessVideos hook with local mock data containing realistic fitness videos across categories: workout tutorials (strength training, HIIT, yoga, pilates), running tips (form analysis, training plans, injury prevention), nutrition advice (meal prep, supplement guides), and sports performance (technique breakdowns, drills). Each mock video should include: id, title, description, thumbnailUrl (placeholder or stock thumbnail), videoUrl or embedUrl, uploader/channel name, view count, and duration fields.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/pages/FiTube.tsx"
+        ],
         "matchedFiles": []
       },
       {
-        "id": "REQ-58",
-        "summary": "Create React Query hook useGetExternalSportsProducts in frontend/src/hooks/useGetExternalSportsProducts.ts that calls the backend method to fetch external sports products. Include optional category filter parameter, proper TypeScript typing for product results, error handling, and enable the query only when the actor is available. Follow the same pattern as useGetExternalProducts hook.",
+        "id": "REQ-70",
+        "summary": "Update useGetExternalSportsProducts hook (frontend/src/hooks/useGetExternalSportsProducts.ts) to return mock data instead of making API calls. The hook should maintain the same TypeScript interface and return type but serve local mock data immediately without network requests. Include a comment explaining that this is mock data for demonstration purposes.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/hooks/useGetExternalSportsProducts.ts"
@@ -29,114 +53,33 @@
         ]
       },
       {
-        "id": "REQ-59",
-        "summary": "Update the Store page (frontend/src/pages/Store.tsx) to display external sports products fetched from the new external API instead of or alongside the existing Go Store products. Each product card should show the product photo, name, price, and a button/link that opens the external product URL in a new tab. Remove or hide internal product management features (add to cart) for external products. Include category filtering for gym equipment, running gear, sports apparel, and supplements.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Store.tsx",
-          "frontend/src/components/ProductFilters.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Store.tsx",
-          "frontend/src/components/ProductFilters.tsx"
-        ]
-      },
-      {
-        "id": "REQ-60",
-        "summary": "Create backend method in main.mo to fetch sports and fitness videos from a configurable external video API endpoint. The method should call the external API with proper error handling, parse the JSON response, and return an array of videos with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, view count, and duration. Follow similar patterns to existing external API integrations.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-61",
-        "summary": "Create React Query hook useGetExternalFitnessVideos in frontend/src/hooks/useGetExternalFitnessVideos.ts that calls the backend method to fetch external sports and fitness videos. Include proper TypeScript typing for video results, error handling, and enable the query only when the actor is available. Follow the pattern of existing video hooks.",
+        "id": "REQ-71",
+        "summary": "Update useGetExternalFitnessVideos hook (frontend/src/hooks/useGetExternalFitnessVideos.ts) to return mock data instead of making API calls. The hook should maintain the same TypeScript interface and return type but serve local mock data immediately without network requests. Include a comment explaining that this is mock data for demonstration purposes.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/hooks/useGetExternalFitnessVideos.ts"
         ],
         "matchedFiles": [
           "frontend/src/hooks/useGetExternalFitnessVideos.ts"
-        ]
-      },
-      {
-        "id": "REQ-62",
-        "summary": "Update the FiTube page (frontend/src/pages/FiTube.tsx) to display external sports and fitness videos fetched from the external API on the main video browsing page at /fitube. Display videos in a grid layout showing video thumbnails, titles, uploader names, and view counts. Each video card should be clickable and navigate to a detail view or open the external video URL. Maintain the existing video upload functionality for internal videos if needed, or clearly distinguish between internal and external videos.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/FiTube.tsx",
-          "frontend/src/components/VideoCard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/FiTube.tsx",
-          "frontend/src/components/VideoCard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-63",
-        "summary": "Add configuration instructions to frontend/README.md for the external sports products API, including environment variable placeholders for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as the existing Go Store API and Fitness Search API configuration instructions.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/README.md"
-        ],
-        "matchedFiles": [
-          "frontend/README.md"
-        ]
-      },
-      {
-        "id": "REQ-64",
-        "summary": "Add sports products API configuration to frontend/.env.example with placeholder values for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY, following the same pattern as the existing Go Store API and Fitness Search API environment variables.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/.env.example"
-        ],
-        "matchedFiles": [
-          "frontend/.env.example"
-        ]
-      },
-      {
-        "id": "REQ-65",
-        "summary": "Add configuration instructions to frontend/README.md for the external fitness videos API, including environment variable placeholders for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as other external API configurations.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/README.md"
-        ],
-        "matchedFiles": [
-          "frontend/README.md"
-        ]
-      },
-      {
-        "id": "REQ-66",
-        "summary": "Add fitness videos API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY, following the same pattern as existing external API environment variables.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/.env.example"
-        ],
-        "matchedFiles": [
-          "frontend/.env.example"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/.env.example",
-    "frontend/README.md",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/ProductCard.tsx",
-    "frontend/src/components/ProductFilters.tsx",
-    "frontend/src/components/VideoCard.tsx",
-    "frontend/src/config/api.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
+    "frontend/public/assets/generated/product-apparel.dim_400x400.png",
+    "frontend/public/assets/generated/product-gym-equipment.dim_400x400.png",
+    "frontend/public/assets/generated/product-running-shoes.dim_400x400.png",
+    "frontend/public/assets/generated/product-supplements.dim_400x400.png",
+    "frontend/public/assets/generated/video-nutrition.dim_640x360.png",
+    "frontend/public/assets/generated/video-running-form.dim_640x360.png",
+    "frontend/public/assets/generated/video-strength-training.dim_640x360.png",
+    "frontend/public/assets/generated/video-yoga.dim_640x360.png",
     "frontend/src/hooks/useGetExternalFitnessVideos.ts",
     "frontend/src/hooks/useGetExternalSportsProducts.ts",
-    "frontend/src/pages/FiTube.tsx",
     "frontend/src/pages/Store.tsx",
     "project_state.json",
     "scratch/component-selection.json",

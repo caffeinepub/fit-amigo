@@ -1,154 +1,92 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Integrate external APIs for sports products in Store and fitness videos in FiTube",
+  "title": "Add mock data and search functionality to Store and FiTube sections",
   "requirements": [
     {
-      "id": "REQ-58",
-      "summary": "Create React Query hook for fetching external sports products with category filtering",
+      "id": "REQ-67",
+      "summary": "Replace external API dependency in Store page with local mock sports product data",
       "acceptanceCriteria": [
-        "Hook accepts optional category filter parameter",
-        "Returns properly typed external sports products array",
-        "Includes loading, error, and success states",
-        "Query is enabled only when actor is available",
-        "Follows existing useGetExternalProducts pattern"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useGetExternalSportsProducts.ts",
-          "operation": "create",
-          "description": "Create React Query hook that calls actor.fetchExternalSportsProducts with optional category and search filters. Parse the JSON response to transform external sports products data into ExternalProduct format with id, name, description, price, imageUrl, category, and externalProductUrl fields. Follow the same pattern as useGetExternalProducts.ts including error handling and enabled conditions. Accepts optional categoryFilter and searchTerm parameters."
-        }
-      ]
-    },
-    {
-      "id": "REQ-59",
-      "summary": "Update Store page to display external sports products with category filtering and external links",
-      "acceptanceCriteria": [
-        "Store page displays external sports products with photos, names, and prices",
-        "Each external product has a clickable link/button that opens the external product URL in a new tab",
-        "Category filter includes options for gym equipment, running gear, sports apparel, and supplements",
-        "External products are clearly distinguished from any internal products (if still shown)",
-        "Product cards use the existing ProductCard component pattern with isExternal flag"
+        "Store page loads successfully without requiring external API configuration",
+        "Mock product data includes at least 12-16 products across all four categories",
+        "Products display with images, names, descriptions, and prices",
+        "External product URLs open in new tabs when clicked"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/Store.tsx",
           "operation": "modify",
-          "description": "Import and use the useGetExternalSportsProducts hook to fetch external sports products. Update the product display logic to render both internal products (from existing hooks) and external sports products from the new API. Pass category filter to the hook. Ensure ProductCard components handle external products with the isExternal flag, displaying external links that open in new tabs instead of add-to-cart buttons. Update the category filter UI to include options for gym equipment, running gear, sports apparel, and supplements. Maintain existing search and price filtering functionality."
-        },
-        {
-          "path": "frontend/src/components/ProductFilters.tsx",
-          "operation": "modify",
-          "description": "Update the category dropdown to include new sports product categories: gym equipment, running gear, sports apparel, and supplements. Ensure the filter state properly triggers re-fetching of external sports products when category changes."
+          "description": "Update Store page to use mock data from useGetExternalSportsProducts hook instead of relying on external API configuration. Ensure products from all sources (internal, mock external, mock sports) are displayed and filtered correctly. Reference generated product images using workspace paths: frontend/public/assets/generated/product-gym-equipment.dim_400x400.png, frontend/public/assets/generated/product-running-shoes.dim_400x400.png, frontend/public/assets/generated/product-apparel.dim_400x400.png, and frontend/public/assets/generated/product-supplements.dim_400x400.png in the mock data structure."
         }
       ]
     },
     {
-      "id": "REQ-61",
-      "summary": "Create React Query hook for fetching external fitness videos",
+      "id": "REQ-68",
+      "summary": "Add search input field with debouncing to Store page for filtering products",
       "acceptanceCriteria": [
-        "Hook fetches external fitness videos via backend method",
-        "Returns properly typed video array with id, title, description, thumbnailUrl, videoUrl, uploader, viewCount, duration",
-        "Includes loading, error, and success states",
-        "Query is enabled only when actor is available"
+        "Search input field is prominently displayed at the top of the Store page",
+        "Search filters products by name and description with case-insensitive matching",
+        "Search results update with 300ms debounce as user types",
+        "Search works in combination with category and price filters",
+        "Empty state message displays when no products match search criteria"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useGetExternalFitnessVideos.ts",
-          "operation": "create",
-          "description": "Create React Query hook that calls actor.fetchSportsAndFitnessVideos to fetch external sports and fitness videos. Parse the JSON response to transform video data into a typed format with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, viewCount, and duration. Include proper error handling, loading states, and enable the query only when actor is available. Follow the pattern of existing video query hooks like useGetVideos.ts."
+          "path": "frontend/src/pages/Store.tsx",
+          "operation": "modify",
+          "description": "Add a search input field at the top of the Store page that filters displayed products by name or description in real-time. Implement client-side filtering with 300ms debouncing using React state and useEffect. Ensure search works seamlessly with existing category and price filters. Display empty state message when no products match search criteria."
         }
       ]
     },
     {
-      "id": "REQ-62",
-      "summary": "Update FiTube page to display external fitness videos in grid layout with navigation to detail view",
+      "id": "REQ-69",
+      "summary": "Replace external API dependency in FiTube page with local mock fitness video data",
       "acceptanceCriteria": [
-        "FiTube main page displays external fitness videos in grid layout",
-        "Each video shows thumbnail, title, uploader name, and view count",
-        "Videos are clickable and navigate to detail view or open external URL",
-        "External videos are visually distinguished from internal uploaded videos (if both are shown)",
-        "Loading and error states are handled appropriately"
+        "FiTube page loads successfully without requiring external API configuration",
+        "Mock video data includes at least 12-16 videos across different fitness categories",
+        "Videos display in grid layout with thumbnails, titles, uploader names, and view counts",
+        "Video cards are clickable and navigate to video detail page or open external video URLs",
+        "Existing video upload functionality remains intact for internal videos"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/FiTube.tsx",
           "operation": "modify",
-          "description": "Import and use the useGetExternalFitnessVideos hook to fetch external sports and fitness videos. Update the video display grid to render both internal videos (from existing useGetVideos hook) and external fitness videos from the new API. For external videos, ensure they are clickable and either navigate to a detail view or open the external videoUrl/embedUrl. Add visual indicators to distinguish external videos from internal uploads (e.g., external link icon badge). Handle loading and error states for both internal and external video sources. Maintain existing video upload button for internal content."
-        },
-        {
-          "path": "frontend/src/components/VideoCard.tsx",
-          "operation": "modify",
-          "description": "Update VideoCard component to handle external videos by accepting an optional isExternal flag and externalUrl prop. When isExternal is true, clicking the card should open the externalUrl in a new tab instead of navigating to the internal VideoDetail page. Add a visual indicator (e.g., small external link icon) to distinguish external videos. Ensure backward compatibility with existing internal video cards."
+          "description": "Update FiTube page to display mock external fitness videos alongside internal videos. Ensure both internal and external videos are displayed in the grid layout. Reference generated video thumbnail images using workspace paths: frontend/public/assets/generated/video-strength-training.dim_640x360.png, frontend/public/assets/generated/video-running-form.dim_640x360.png, frontend/public/assets/generated/video-yoga.dim_640x360.png, and frontend/public/assets/generated/video-nutrition.dim_640x360.png in the mock data structure. Preserve existing video upload functionality for authenticated users."
         }
       ]
     },
     {
-      "id": "REQ-63",
-      "summary": "Document external sports products API configuration in README.md",
+      "id": "REQ-70",
+      "summary": "Update useGetExternalSportsProducts hook to return mock data instead of making API calls",
       "acceptanceCriteria": [
-        "README.md includes section for sports products API configuration",
-        "Documents VITE_SPORTS_PRODUCTS_API_URL environment variable",
-        "Documents VITE_SPORTS_PRODUCTS_API_KEY environment variable",
-        "Follows same documentation pattern as Go Store API and Fitness Search API sections",
-        "Includes instructions for post-deployment configuration"
+        "Hook returns mock data synchronously without API calls",
+        "TypeScript types remain unchanged",
+        "Hook includes documentation comment about mock data usage",
+        "No external API configuration required"
       ],
       "file_operations": [
         {
-          "path": "frontend/README.md",
+          "path": "frontend/src/hooks/useGetExternalSportsProducts.ts",
           "operation": "modify",
-          "description": "Add a new section for Sports Products API configuration following the same pattern as the existing Go Store API and Fitness Search API sections. Document the required environment variables VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY with placeholder examples. Include instructions explaining that these credentials must be configured post-deployment and how to set them in the deployment environment. Place this section alongside the other external API configuration sections."
+          "description": "Replace external API calls with local mock data containing realistic sports products across categories: gym equipment, running gear, sports apparel, and supplements. Each mock product should include id, name, description, price, imageUrl (using generated image paths like /assets/generated/product-gym-equipment.dim_400x400.png), category, and externalProductUrl fields. Maintain the same TypeScript interface and return type. Add a comment explaining this is mock data for demonstration purposes. Remove dependency on API configuration checks."
         }
       ]
     },
     {
-      "id": "REQ-64",
-      "summary": "Add sports products API environment variables to .env.example",
+      "id": "REQ-71",
+      "summary": "Update useGetExternalFitnessVideos hook to return mock data instead of making API calls",
       "acceptanceCriteria": [
-        ".env.example includes VITE_SPORTS_PRODUCTS_API_URL with placeholder value",
-        ".env.example includes VITE_SPORTS_PRODUCTS_API_KEY with placeholder value",
-        "Follows existing environment variable naming and format conventions"
+        "Hook returns mock data synchronously without API calls",
+        "TypeScript types remain unchanged",
+        "Hook includes documentation comment about mock data usage",
+        "No external API configuration required"
       ],
       "file_operations": [
         {
-          "path": "frontend/.env.example",
+          "path": "frontend/src/hooks/useGetExternalFitnessVideos.ts",
           "operation": "modify",
-          "description": "Add VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY environment variable placeholders following the same format as the existing Go Store API and Fitness Search API variables. Use placeholder values like 'https://api.example.com/sports-products' and 'your-api-key-here' to match the existing pattern."
-        }
-      ]
-    },
-    {
-      "id": "REQ-65",
-      "summary": "Document external fitness videos API configuration in README.md",
-      "acceptanceCriteria": [
-        "README.md includes section for fitness videos API configuration",
-        "Documents VITE_FITNESS_VIDEOS_API_URL environment variable",
-        "Documents VITE_FITNESS_VIDEOS_API_KEY environment variable",
-        "Follows same documentation pattern as other API configuration sections",
-        "Includes instructions for post-deployment configuration"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/README.md",
-          "operation": "modify",
-          "description": "Add a new section for Fitness Videos API configuration following the same pattern as the existing external API documentation sections. Document the required environment variables VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY with placeholder examples. Include instructions explaining that these credentials must be configured post-deployment and how to set them in the deployment environment. Place this section alongside the other external API configuration sections."
-        }
-      ]
-    },
-    {
-      "id": "REQ-66",
-      "summary": "Add fitness videos API environment variables to .env.example",
-      "acceptanceCriteria": [
-        ".env.example includes VITE_FITNESS_VIDEOS_API_URL with placeholder value",
-        ".env.example includes VITE_FITNESS_VIDEOS_API_KEY with placeholder value",
-        "Follows existing environment variable naming and format conventions"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/.env.example",
-          "operation": "modify",
-          "description": "Add VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY environment variable placeholders following the same format as the existing external API variables. Use placeholder values like 'https://api.example.com/fitness-videos' and 'your-api-key-here' to match the existing pattern."
+          "description": "Replace external API calls with local mock data containing realistic fitness videos across categories: workout tutorials (strength training, HIIT, yoga, pilates), running tips, nutrition advice, and sports performance. Each mock video should include id, title, description, thumbnailUrl (using generated thumbnail paths like /assets/generated/video-strength-training.dim_640x360.png), videoUrl or embedUrl, uploader/channel name, view count, and duration fields. Maintain the same TypeScript interface and return type. Add a comment explaining this is mock data for demonstration purposes. Remove dependency on API configuration checks."
         }
       ]
     }

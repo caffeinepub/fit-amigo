@@ -2,8 +2,50 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-react-query-hook-usegetexternalsportsproducts-in-frontend-src-hooks-usegetexternalsportsproducts-ts-that-calls-the-backend-method-to-fetch-external-sports-products-include-optional-category-filter-parameter-proper-typescript-typing-for-product-results-error-handling-and-enable-the-query-only-when-the-actor-is-available-follow-the-same-pattern-as-usegetexternalproducts-hook",
-      "featureTitle": "Create React Query hook useGetExternalSportsProducts in frontend/src/hooks/useGetExternalSportsProducts.ts that calls the backend method to fetch external sports products. Include optional category filter parameter, proper TypeScript typing for product results, error handling, and enable the query only when the actor is available. Follow the same pattern as useGetExternalProducts hook.",
+      "featureId": "feature-remove-external-api-dependencies-from-store-page-frontend-src-pages-store-tsx-and-replace-usegetexternalsportsproducts-hook-with-local-mock-data-containing-realistic-sports-products-across-categories-gym-equipment-dumbbells-barbells-resistance-bands-kettlebells-running-gear-running-shoes-gps-watches-hydration-packs-sports-apparel-workout-shirts-shorts-leggings-jackets-and-supplements-protein-powder-pre-workout-bcaas-vitamins-each-mock-product-should-include-id-name-description-price-imageurl-placeholder-or-stock-image-url-category-and-externalproducturl-fields",
+      "featureTitle": "Remove external API dependencies from Store page (frontend/src/pages/Store.tsx) and replace useGetExternalSportsProducts hook with local mock data containing realistic sports products across categories: gym equipment (dumbbells, barbells, resistance bands, kettlebells), running gear (running shoes, GPS watches, hydration packs), sports apparel (workout shirts, shorts, leggings, jackets), and supplements (protein powder, pre-workout, BCAAs, vitamins). Each mock product should include: id, name, description, price, imageUrl (placeholder or stock image URL), category, and externalProductUrl fields.",
+      "files": [
+        "frontend/src/pages/Store.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-67"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-search-input-field-at-the-top-of-the-store-page-frontend-src-pages-store-tsx-that-allows-users-to-filter-displayed-products-by-name-or-description-in-real-time-implement-client-side-search-filtering-that-updates-the-visible-products-as-the-user-types-with-debouncing-300ms-delay-to-improve-performance-the-search-should-work-seamlessly-with-existing-category-and-price-filters",
+      "featureTitle": "Add a search input field at the top of the Store page (frontend/src/pages/Store.tsx) that allows users to filter displayed products by name or description in real-time. Implement client-side search filtering that updates the visible products as the user types, with debouncing (300ms delay) to improve performance. The search should work seamlessly with existing category and price filters.",
+      "files": [
+        "frontend/src/pages/Store.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-68"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-usegetexternalsportsproducts-hook-frontend-src-hooks-usegetexternalsportsproducts-ts-to-return-mock-data-instead-of-making-api-calls-the-hook-should-maintain-the-same-typescript-interface-and-return-type-but-serve-local-mock-data-immediately-without-network-requests-include-a-comment-explaining-that-this-is-mock-data-for-demonstration-purposes",
+      "featureTitle": "Update useGetExternalSportsProducts hook (frontend/src/hooks/useGetExternalSportsProducts.ts) to return mock data instead of making API calls. The hook should maintain the same TypeScript interface and return type but serve local mock data immediately without network requests. Include a comment explaining that this is mock data for demonstration purposes.",
       "files": [
         "frontend/src/hooks/useGetExternalSportsProducts.ts"
       ],
@@ -18,35 +60,13 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-58"
+        "REQ-70"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-store-page-frontend-src-pages-store-tsx-to-display-external-sports-products-fetched-from-the-new-external-api-instead-of-or-alongside-the-existing-go-store-products-each-product-card-should-show-the-product-photo-name-price-and-a-button-link-that-opens-the-external-product-url-in-a-new-tab-remove-or-hide-internal-product-management-features-add-to-cart-for-external-products-include-category-filtering-for-gym-equipment-running-gear-sports-apparel-and-supplements",
-      "featureTitle": "Update the Store page (frontend/src/pages/Store.tsx) to display external sports products fetched from the new external API instead of or alongside the existing Go Store products. Each product card should show the product photo, name, price, and a button/link that opens the external product URL in a new tab. Remove or hide internal product management features (add to cart) for external products. Include category filtering for gym equipment, running gear, sports apparel, and supplements.",
-      "files": [
-        "frontend/src/components/ProductFilters.tsx",
-        "frontend/src/pages/Store.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-59"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-react-query-hook-usegetexternalfitnessvideos-in-frontend-src-hooks-usegetexternalfitnessvideos-ts-that-calls-the-backend-method-to-fetch-external-sports-and-fitness-videos-include-proper-typescript-typing-for-video-results-error-handling-and-enable-the-query-only-when-the-actor-is-available-follow-the-pattern-of-existing-video-hooks",
-      "featureTitle": "Create React Query hook useGetExternalFitnessVideos in frontend/src/hooks/useGetExternalFitnessVideos.ts that calls the backend method to fetch external sports and fitness videos. Include proper TypeScript typing for video results, error handling, and enable the query only when the actor is available. Follow the pattern of existing video hooks.",
+      "featureId": "feature-update-usegetexternalfitnessvideos-hook-frontend-src-hooks-usegetexternalfitnessvideos-ts-to-return-mock-data-instead-of-making-api-calls-the-hook-should-maintain-the-same-typescript-interface-and-return-type-but-serve-local-mock-data-immediately-without-network-requests-include-a-comment-explaining-that-this-is-mock-data-for-demonstration-purposes",
+      "featureTitle": "Update useGetExternalFitnessVideos hook (frontend/src/hooks/useGetExternalFitnessVideos.ts) to return mock data instead of making API calls. The hook should maintain the same TypeScript interface and return type but serve local mock data immediately without network requests. Include a comment explaining that this is mock data for demonstration purposes.",
       "files": [
         "frontend/src/hooks/useGetExternalFitnessVideos.ts"
       ],
@@ -61,113 +81,7 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-61"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-fitube-page-frontend-src-pages-fitube-tsx-to-display-external-sports-and-fitness-videos-fetched-from-the-external-api-on-the-main-video-browsing-page-at-fitube-display-videos-in-a-grid-layout-showing-video-thumbnails-titles-uploader-names-and-view-counts-each-video-card-should-be-clickable-and-navigate-to-a-detail-view-or-open-the-external-video-url-maintain-the-existing-video-upload-functionality-for-internal-videos-if-needed-or-clearly-distinguish-between-internal-and-external-videos",
-      "featureTitle": "Update the FiTube page (frontend/src/pages/FiTube.tsx) to display external sports and fitness videos fetched from the external API on the main video browsing page at /fitube. Display videos in a grid layout showing video thumbnails, titles, uploader names, and view counts. Each video card should be clickable and navigate to a detail view or open the external video URL. Maintain the existing video upload functionality for internal videos if needed, or clearly distinguish between internal and external videos.",
-      "files": [
-        "frontend/src/components/VideoCard.tsx",
-        "frontend/src/pages/FiTube.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-62"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-external-sports-products-api-including-environment-variable-placeholders-for-vite-sports-products-api-url-and-vite-sports-products-api-key-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-the-existing-go-store-api-and-fitness-search-api-configuration-instructions",
-      "featureTitle": "Add configuration instructions to frontend/README.md for the external sports products API, including environment variable placeholders for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as the existing Go Store API and Fitness Search API configuration instructions.",
-      "files": [
-        "frontend/README.md"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-63"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-sports-products-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-sports-products-api-url-and-vite-sports-products-api-key-following-the-same-pattern-as-the-existing-go-store-api-and-fitness-search-api-environment-variables",
-      "featureTitle": "Add sports products API configuration to frontend/.env.example with placeholder values for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY, following the same pattern as the existing Go Store API and Fitness Search API environment variables.",
-      "files": [
-        "frontend/.env.example"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-64"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-external-fitness-videos-api-including-environment-variable-placeholders-for-vite-fitness-videos-api-url-and-vite-fitness-videos-api-key-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-other-external-api-configurations",
-      "featureTitle": "Add configuration instructions to frontend/README.md for the external fitness videos API, including environment variable placeholders for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as other external API configurations.",
-      "files": [
-        "frontend/README.md"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-65"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-fitness-videos-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-fitness-videos-api-url-and-vite-fitness-videos-api-key-following-the-same-pattern-as-existing-external-api-environment-variables",
-      "featureTitle": "Add fitness videos API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY, following the same pattern as existing external API environment variables.",
-      "files": [
-        "frontend/.env.example"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-66"
+        "REQ-71"
       ],
       "confidence": "high"
     }

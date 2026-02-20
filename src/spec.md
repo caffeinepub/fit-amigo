@@ -1,15 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Integrate external APIs to automatically populate sports products in the Store and fitness videos in FiTube.
+**Goal:** Add mock data and search functionality to Store and FiTube sections to enable standalone operation without external API dependencies.
 
 **Planned changes:**
-- Add backend method to fetch external sports products (gym equipment, running gear, sports apparel, supplements) from configurable API endpoint with category filtering
-- Create React Query hook to fetch external sports products from backend
-- Update Store page to display external sports products with photos, prices, and links to external product URLs, including category filtering
-- Add backend method to fetch sports and fitness videos from external video API endpoint
-- Create React Query hook to fetch external fitness videos from backend
-- Update FiTube page to display external sports and fitness videos in grid layout with thumbnails, titles, uploader names, and view counts
-- Add configuration instructions and environment variables for both APIs (VITE_SPORTS_PRODUCTS_API_URL, VITE_SPORTS_PRODUCTS_API_KEY, VITE_FITNESS_VIDEOS_API_URL, VITE_FITNESS_VIDEOS_API_KEY) to README.md and .env.example
+- Replace external API calls in Store page with local mock data containing realistic sports products across gym equipment, running gear, apparel, and supplements categories (12-16 products)
+- Add search input field to Store page with real-time filtering by product name/description, including 300ms debounce
+- Replace external API calls in FiTube page with local mock data containing realistic fitness videos across workout tutorials, running tips, nutrition advice, and sports performance categories (12-16 videos)
+- Update useGetExternalSportsProducts and useGetExternalFitnessVideos hooks to return mock data synchronously instead of making API calls
 
-**User-visible outcome:** Users can browse external sports products in the Store with category filters and click through to purchase from external vendors. Users can watch sports and fitness videos from external sources on the FiTube page.
+**User-visible outcome:** Users can browse a populated Store with searchable sports products and view a populated FiTube section with fitness videos, all working without external API configuration.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
-  "summary": "FIT AMIGO - A comprehensive fitness platform. Phase 1 includes user authentication, navigation structure, e-commerce store for sports products and supplements (product catalog, shopping cart, checkout, order management), and workout tracker (log exercise sessions with sets, reps, weights). Phase 2 includes hybrid product catalog showing both internal products and external products from Go Store API, and admin interface for product management. Phase 3 is split into sub-phases: Sub-phase 3.1 (FiTube video platform + Running Monitor) - completed, Sub-phase 3.2 (Food Tracker with AI-powered food recognition and Nutritionix API integration) - completed, Sub-phase 3.3 (Sports/Fitness News Section with external and internal articles + Web Search across all content) - completed. Now updating Store to exclusively show external sports products (gym equipment, running gear, sports apparel, supplements) fetched from external API with photos, prices, and external links, and updating FiTube to automatically fetch and display sports/fitness videos from external API.",
+  "projectStateVersion": 17,
+  "summary": "FIT AMIGO - A comprehensive fitness platform. Phase 1 includes user authentication, navigation structure, e-commerce store for sports products and supplements (product catalog, shopping cart, checkout, order management), and workout tracker (log exercise sessions with sets, reps, weights). Phase 2 includes hybrid product catalog showing both internal products and external products from Go Store API, and admin interface for product management. Phase 3 is split into sub-phases: Sub-phase 3.1 (FiTube video platform + Running Monitor) - completed, Sub-phase 3.2 (Food Tracker with AI-powered food recognition and Nutritionix API integration) - completed, Sub-phase 3.3 (Sports/Fitness News Section with external and internal articles + Web Search across all content) - completed. Now updating Store to work independently with mock sports product data (gym equipment, running gear, sports apparel, supplements) and a search bar for filtering products, and updating FiTube to work independently with mock fitness video data - both sections no longer require external API configuration.",
   "architectural_notes": [
     "Phase 1 focus: Authentication, navigation, e-commerce, and workout tracker",
     "E-commerce modeled after Amazon/Flipkart with full cart and order management",
@@ -21,11 +21,10 @@
     "Go Store API credentials and endpoint URL need to be configured post-deployment",
     "AI-powered food recognition may require additional ML/AI services or APIs",
     "Sub-phase 3.3 complexity requires splitting into smaller builds (news admin interface, then search)",
-    "Fitness-specific search API credentials and endpoint URL need to be configured post-deployment",
-    "Sports products API credentials and endpoint URL need to be configured post-deployment",
-    "Fitness video API credentials and endpoint URL need to be configured post-deployment"
+    "Fitness-specific search API credentials and endpoint URL need to be configured post-deployment"
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
+  "imageRequirements": "## Required Images\n- Placeholder product image for gym equipment showing dumbbells and weights (product-gym-equipment.dim_400x400.png)\n- Placeholder product image for running shoes with athletic styling (product-running-shoes.dim_400x400.png)\n- Placeholder product image for sports apparel showing workout clothing (product-apparel.dim_400x400.png)\n- Placeholder product image for protein supplements and powder containers (product-supplements.dim_400x400.png)\n- Placeholder video thumbnail for strength training workout (video-strength-training.dim_640x360.png)\n- Placeholder video thumbnail for running form tutorial (video-running-form.dim_640x360.png)\n- Placeholder video thumbnail for yoga session (video-yoga.dim_640x360.png)\n- Placeholder video thumbnail for nutrition meal prep guide (video-nutrition.dim_640x360.png)",
   "existing_features": [
     {
       "id": "feature-implement-user-authentication-using-internet-identity-with-support-for-passkeys-google-apple-and-microsoft-login-methods",
@@ -418,6 +417,38 @@
         "REQ-66"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-external-api-dependencies-from-store-page-frontend-src-pages-store-tsx-and-replace-usegetexternalsportsproducts-hook-with-local-mock-data-containing-realistic-sports-products-across-categories-gym-equipment-dumbbells-barbells-resistance-bands-kettlebells-running-gear-running-shoes-gps-watches-hydration-packs-sports-apparel-workout-shirts-shorts-leggings-jackets-and-supplements-protein-powder-pre-workout-bcaas-vitamins-each-mock-product-should-include-id-name-description-price-imageurl-placeholder-or-stock-image-url-category-and-externalproducturl-fields",
+      "title": "Remove external API dependencies from Store page (frontend/src/pages/Store.tsx) and replace useGetExternalSportsProducts hook with local mock data containing realistic sports products across categories: gym equipment (dumbbells, barbells, resistance bands, kettlebells), running gear (running shoes, GPS watches, hydration packs), sports apparel (workout shirts, shorts, leggings, jackets), and supplements (protein powder, pre-workout, BCAAs, vitamins). Each mock product should include: id, name, description, price, imageUrl (placeholder or stock image URL), category, and externalProductUrl fields.",
+      "reqIds": [
+        "REQ-67"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-search-input-field-at-the-top-of-the-store-page-frontend-src-pages-store-tsx-that-allows-users-to-filter-displayed-products-by-name-or-description-in-real-time-implement-client-side-search-filtering-that-updates-the-visible-products-as-the-user-types-with-debouncing-300ms-delay-to-improve-performance-the-search-should-work-seamlessly-with-existing-category-and-price-filters",
+      "title": "Add a search input field at the top of the Store page (frontend/src/pages/Store.tsx) that allows users to filter displayed products by name or description in real-time. Implement client-side search filtering that updates the visible products as the user types, with debouncing (300ms delay) to improve performance. The search should work seamlessly with existing category and price filters.",
+      "reqIds": [
+        "REQ-68"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-usegetexternalsportsproducts-hook-frontend-src-hooks-usegetexternalsportsproducts-ts-to-return-mock-data-instead-of-making-api-calls-the-hook-should-maintain-the-same-typescript-interface-and-return-type-but-serve-local-mock-data-immediately-without-network-requests-include-a-comment-explaining-that-this-is-mock-data-for-demonstration-purposes",
+      "title": "Update useGetExternalSportsProducts hook (frontend/src/hooks/useGetExternalSportsProducts.ts) to return mock data instead of making API calls. The hook should maintain the same TypeScript interface and return type but serve local mock data immediately without network requests. Include a comment explaining that this is mock data for demonstration purposes.",
+      "reqIds": [
+        "REQ-70"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-usegetexternalfitnessvideos-hook-frontend-src-hooks-usegetexternalfitnessvideos-ts-to-return-mock-data-instead-of-making-api-calls-the-hook-should-maintain-the-same-typescript-interface-and-return-type-but-serve-local-mock-data-immediately-without-network-requests-include-a-comment-explaining-that-this-is-mock-data-for-demonstration-purposes",
+      "title": "Update useGetExternalFitnessVideos hook (frontend/src/hooks/useGetExternalFitnessVideos.ts) to return mock data instead of making API calls. The hook should maintain the same TypeScript interface and return type but serve local mock data immediately without network requests. Include a comment explaining that this is mock data for demonstration purposes.",
+      "reqIds": [
+        "REQ-71"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -656,18 +687,6 @@
       "status": "pending"
     },
     {
-      "id": "AR-44",
-      "summary": "Update Store section to fetch and display external sports products (gym equipment, running gear, sports apparel, supplements) from external API with photos, prices, and external product links",
-      "reqIds": [],
-      "status": "in_progress"
-    },
-    {
-      "id": "AR-45",
-      "summary": "Update FiTube main page to automatically fetch and display sports/fitness videos from external API with thumbnails, titles, and metadata",
-      "reqIds": [],
-      "status": "in_progress"
-    },
-    {
       "id": "AR-46",
       "summary": "Create backend method in main.mo to fetch external sports products (gym equipment, running gear, sports apparel, supplements) from a configurable external API endpoint. The method should accept optional category and search filters, call the external API with proper error handling, parse the JSON response, and return an array of products with fields: id, name, description, price, imageUrl, category, and externalProductUrl. Follow the same pattern as the existing fetchExternalProducts method for Go Store API.",
       "reqIds": [
@@ -680,6 +699,32 @@
       "summary": "Create backend method in main.mo to fetch sports and fitness videos from a configurable external video API endpoint. The method should call the external API with proper error handling, parse the JSON response, and return an array of videos with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, view count, and duration. Follow similar patterns to existing external API integrations.",
       "reqIds": [
         "REQ-60"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-50",
+      "summary": "Add search bar on Store page to filter and search mock sports products",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-51",
+      "summary": "Replace Store external API with mock sports product data (gym equipment, running gear, apparel, supplements)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-52",
+      "summary": "Replace FiTube external API with mock fitness video data",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-55",
+      "summary": "Remove external API dependencies from FiTube page (frontend/src/pages/FiTube.tsx) and replace useGetExternalFitnessVideos hook with local mock data containing realistic fitness videos across categories: workout tutorials (strength training, HIIT, yoga, pilates), running tips (form analysis, training plans, injury prevention), nutrition advice (meal prep, supplement guides), and sports performance (technique breakdowns, drills). Each mock video should include: id, title, description, thumbnailUrl (placeholder or stock thumbnail), videoUrl or embedUrl, uploader/channel name, view count, and duration fields.",
+      "reqIds": [
+        "REQ-69"
       ],
       "status": "pending"
     }

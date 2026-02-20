@@ -14,7 +14,7 @@
   "frontend/src/components/OrderStatusBadge.tsx": "Status badge component with color-coded order status display using vibrant fitness color palette.",
   "frontend/src/components/WorkoutCard.tsx": "Workout display card showing exercise name, sets, reps, and weight in an organized grid layout with vibrant color accents.",
   "frontend/src/components/WorkoutForm.tsx": "Workout logging form component using React Hook Form with fields for exercise name, sets, reps, and weight with validation.",
-  "frontend/src/pages/Store.tsx": "Store page that fetches and displays internal products, Go Store external products, and sports products from external API in a unified grid with search, category filters, and visual distinction between product types.",
+  "frontend/src/pages/Store.tsx": "Store page with search bar featuring 300ms debounced input, displaying internal products, Go Store external products, and mock sports products in a unified grid with category and price filters, safely handling products with or without description property.",
   "frontend/src/pages/ProductDetail.tsx": "Product detail page showing full product information, large image, price, availability, description, and add-to-cart functionality.",
   "frontend/src/pages/Cart.tsx": "Shopping cart page displaying all cart items with quantity controls, subtotal calculation, and checkout button.",
   "frontend/src/pages/Checkout.tsx": "Checkout page with shipping/contact form and order summary, handling order placement and navigation to confirmation.",
@@ -66,7 +66,7 @@
   "frontend/src/components/VideoCard.tsx": "Video card component that displays both internal and external videos with visual distinction, showing appropriate metadata (likes/comments for internal, views/duration for external) and handling navigation or external links on click.",
   "frontend/src/components/VideoCommentsSection.tsx": "Comments section component with comment list, add comment form, and delete functionality for comment owners.",
   "frontend/src/components/RunningSessionCard.tsx": "Running session card displaying distance, duration, date, optional notes, and delete button with confirmation dialog.",
-  "frontend/src/pages/FiTube.tsx": "FiTube main page that fetches and displays both internal user-uploaded videos and external sports/fitness videos from API in a unified grid layout with hero section and upload button.",
+  "frontend/src/pages/FiTube.tsx": "FiTube main page that displays both internal user-uploaded videos and mock external fitness videos in a unified grid layout with hero section and upload button for authenticated users.",
   "frontend/src/pages/VideoDetail.tsx": "Video detail page with video player, like/share buttons, video information, and comments section.",
   "frontend/src/pages/UploadVideo.tsx": "Video upload page with form for title, description, and video file with upload progress indicator.",
   "frontend/src/pages/RunningMonitor.tsx": "Running monitor page with hero section, statistics summary (total runs, distance, duration), and running sessions grid.",
@@ -92,6 +92,6 @@
   "frontend/src/hooks/useSearchContent.ts": "React Query hook that calls backend searchContent method with a search term parameter, enabled only when term is 2+ characters, returning typed SearchResult array with loading and error states.",
   "frontend/src/pages/SearchResults.tsx": "Search results page that displays both internal FIT AMIGO content and external web results in visually distinct sections, with internal results showing content type groupings and external results displaying with badges and external link icons, all results clickable with proper routing or opening in new tabs.",
   "frontend/src/hooks/useExternalSearch.ts": "React Query hook that fetches external fitness search results from backend, parses JSON response, transforms data to ExternalSearchResult format with fields for resultType, title, preview, sourceUrl, and sourceName, enabled only when search term is 2+ characters.",
-  "frontend/src/hooks/useGetExternalSportsProducts.ts": "React Query hook that fetches external sports products from the backend API with optional category and search filters, parsing JSON response and transforming data to ExternalSportsProduct format with proper error handling.",
-  "frontend/src/hooks/useGetExternalFitnessVideos.ts": "React Query hook that fetches external sports and fitness videos from the backend API, parsing JSON response and transforming data to ExternalFitnessVideo format with fields for id, title, description, thumbnailUrl, videoUrl, uploader, viewCount, and duration."
+  "frontend/src/hooks/useGetExternalSportsProducts.ts": "React Query hook that returns mock sports products data (16 products across gym equipment, running gear, sports apparel, and supplements categories) with category and search filtering, no external API required.",
+  "frontend/src/hooks/useGetExternalFitnessVideos.ts": "React Query hook that returns mock fitness videos data (16 videos across strength training, HIIT, running, yoga, pilates, and nutrition categories) with metadata including view counts and duration, no external API required."
 }

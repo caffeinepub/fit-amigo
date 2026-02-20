@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchProducts } from '../hooks/useSearchProducts';
 import { useGetExternalProducts } from '../hooks/useGetExternalProducts';
 import { useGetExternalSportsProducts } from '../hooks/useGetExternalSportsProducts';
@@ -14,19 +14,29 @@ import type { ExternalProduct } from '../types/ExternalProduct';
 import type { ExternalSportsProduct } from '../hooks/useGetExternalSportsProducts';
 
 export default function Store() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [maxPrice, setMaxPrice] = useState('');
   const { identity } = useInternetIdentity();
   
-  const { data: internalProducts = [], isLoading: internalLoading } = useSearchProducts(searchTerm);
+  // Debounce search input with 300ms delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const { data: internalProducts = [], isLoading: internalLoading } = useSearchProducts(debouncedSearch);
   const { data: externalProducts = [], isLoading: externalLoading } = useGetExternalProducts();
   
   // Map category filter for sports products API
   const sportsCategory = category !== 'all' ? category : undefined;
   const { data: sportsProducts = [], isLoading: sportsLoading } = useGetExternalSportsProducts(
     sportsCategory,
-    searchTerm || undefined
+    debouncedSearch || undefined
   );
   
   const addToCart = useAddToCart();
@@ -40,10 +50,18 @@ export default function Store() {
     ...sportsProducts,
   ];
 
+  // Filter products by search term, category, and price
   const filteredProducts = allProducts.filter((product) => {
     const isExternal = 'isExternal' in product && product.isExternal;
     const productName = product.name.toLowerCase();
+    const productDescription = 'description' in product ? product.description.toLowerCase() : '';
     const productCategory = 'category' in product ? product.category : '';
+    
+    // Search filtering (case-insensitive, matches name or description)
+    const searchTerm = debouncedSearch.toLowerCase();
+    const searchMatch = !searchTerm || 
+      productName.includes(searchTerm) || 
+      productDescription.includes(searchTerm);
     
     // Category filtering
     let categoryMatch = category === 'all';
@@ -65,7 +83,7 @@ export default function Store() {
     const price = isExternal ? product.price : Number(product.price);
     const priceMatch = !maxPrice || price <= Number(maxPrice);
 
-    return categoryMatch && priceMatch;
+    return searchMatch && categoryMatch && priceMatch;
   });
 
   const handleAddToCart = async (productId: bigint) => {
@@ -112,8 +130,8 @@ export default function Store() {
             <Input
               type="text"
               placeholder="Search for products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="pl-12 h-14 text-lg"
             />
           </div>
@@ -138,7 +156,12 @@ export default function Store() {
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-xl text-muted-foreground">No products found</p>
+                <p className="text-xl text-muted-foreground mb-2">No products found</p>
+                {(debouncedSearch || category !== 'all' || maxPrice) && (
+                  <p className="text-sm text-muted-foreground">
+                    Try adjusting your search or filters
+                  </p>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
