@@ -9,7 +9,9 @@ export function useGetVideo(videoId: bigint | null) {
     queryKey: ['video', videoId?.toString()],
     queryFn: async () => {
       if (!actor || !videoId) return null;
-      return actor.getVideo(videoId);
+      // Use getAllVideos and filter by ID as workaround
+      const videos = await actor.getAllVideos();
+      return videos.find(v => v.id === videoId) || null;
     },
     enabled: !!actor && !actorFetching && videoId !== null,
   });

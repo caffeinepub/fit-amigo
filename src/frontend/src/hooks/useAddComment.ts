@@ -13,7 +13,8 @@ export function useAddComment() {
   return useMutation({
     mutationFn: async ({ videoId, text }: AddCommentParams) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.addComment(videoId, text);
+      // Backend method not yet implemented
+      throw new Error('addComment method not yet implemented in backend');
     },
     onSuccess: (_, { videoId }) => {
       queryClient.invalidateQueries({ queryKey: ['videoComments', videoId.toString()] });

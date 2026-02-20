@@ -13,7 +13,8 @@ export function useDeleteComment() {
   return useMutation({
     mutationFn: async ({ commentId }: DeleteCommentParams) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.deleteComment(commentId);
+      // Backend method not yet implemented
+      throw new Error('deleteComment method not yet implemented in backend');
     },
     onSuccess: (_, { videoId }) => {
       queryClient.invalidateQueries({ queryKey: ['videoComments', videoId.toString()] });

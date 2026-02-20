@@ -1,148 +1,222 @@
 {
   "kind": "build_request",
-  "title": "Add Food Tracker with manual search and logging",
+  "title": "Integrate external APIs for sports products in Store and fitness videos in FiTube",
   "projectName": "FIT AMIGO",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Food diary page showing all logged foods with nutritional breakdown",
-          "Daily macro tracking summary (total calories, protein, carbs, fat)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Food Tracker page is accessible at /food route",
-        "Page displays a list of all logged foods for the current user",
-        "Each food entry shows nutritional information: calories, protein (g), carbs (g), fat (g)",
-        "Daily summary section displays totals for calories, protein, carbs, and fat",
-        "Page requires authentication to access"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "Food search interface where users can search for foods by name",
-          "Add food form to log meals with serving sizes"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Add Food page includes a search input field for food names",
-        "Search results display foods with nutritional information from Nutritionix API",
-        "User can select a food from search results",
-        "User can specify serving size/quantity before logging",
-        "Logged food is saved and appears in the food diary",
-        "Page includes navigation back to the Food Tracker"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Implement backend methods to store food entries with fields for food name, calories, protein, carbs, fat, serving size, and timestamp, and retrieve all food entries for the authenticated user",
+      "id": "REQ-57",
+      "text": "Create backend method in main.mo to fetch external sports products (gym equipment, running gear, sports apparel, supplements) from a configurable external API endpoint. The method should accept optional category and search filters, call the external API with proper error handling, parse the JSON response, and return an array of products with fields: id, name, description, price, imageUrl, category, and externalProductUrl. Follow the same pattern as the existing fetchExternalProducts method for Go Store API.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-recent"
         ],
         "quotes": [
-          "Backend methods for storing food entries"
+          "Store needs to show product photo and price and Link to external API. gym equipment, running gear, sports apparel, supplements.",
+          "integrate with external APIs to automatically populate sports products"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores food entries with all required nutritional fields",
-        "Food entries are associated with the user's Principal",
-        "Backend provides a method to retrieve all food entries for a user",
-        "Food entries include timestamp for daily tracking",
-        "Backend follows the single-actor architecture pattern used in main.mo"
+        "Backend method accepts optional category filter (gym equipment, running gear, sports apparel, supplements)",
+        "Method calls external sports products API with proper error handling for network failures",
+        "Returns array of products with id, name, description, price, imageUrl, category, and externalProductUrl fields",
+        "API endpoint URL and credentials are configurable via initialization parameters (similar to Go Store API pattern)"
       ]
     },
     {
-      "id": "REQ-4",
-      "text": "Integrate with Nutritionix API to search for foods by name and fetch detailed nutritional data including calories, protein, carbs, and fat in grams",
+      "id": "REQ-58",
+      "text": "Create React Query hook useGetExternalSportsProducts in frontend/src/hooks/useGetExternalSportsProducts.ts that calls the backend method to fetch external sports products. Include optional category filter parameter, proper TypeScript typing for product results, error handling, and enable the query only when the actor is available. Follow the same pattern as useGetExternalProducts hook.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "Store needs to show product photo and price and Link to external API",
+          "integrate with external APIs to automatically populate sports products"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hook accepts optional category filter parameter",
+        "Returns properly typed external sports products array",
+        "Includes loading, error, and success states",
+        "Query is enabled only when actor is available",
+        "Follows existing useGetExternalProducts pattern"
+      ]
+    },
+    {
+      "id": "REQ-59",
+      "text": "Update the Store page (frontend/src/pages/Store.tsx) to display external sports products fetched from the new external API instead of or alongside the existing Go Store products. Each product card should show the product photo, name, price, and a button/link that opens the external product URL in a new tab. Remove or hide internal product management features (add to cart) for external products. Include category filtering for gym equipment, running gear, sports apparel, and supplements.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "Store needs to show product photo and price and Link to external API. gym equipment, running gear, sports apparel, supplements."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Store page displays external sports products with photos, names, and prices",
+        "Each external product has a clickable link/button that opens the external product URL in a new tab",
+        "Category filter includes options for gym equipment, running gear, sports apparel, and supplements",
+        "External products are clearly distinguished from any internal products (if still shown)",
+        "Product cards use the existing ProductCard component pattern with isExternal flag"
+      ]
+    },
+    {
+      "id": "REQ-60",
+      "text": "Create backend method in main.mo to fetch sports and fitness videos from a configurable external video API endpoint. The method should call the external API with proper error handling, parse the JSON response, and return an array of videos with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, view count, and duration. Follow similar patterns to existing external API integrations.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-recent"
         ],
         "quotes": [
-          "Integration with Nutritionix API to fetch nutritional data (calories, protein, carbs, fat in grams)",
-          "Backend methods for making Nutritionix API calls"
+          "FiTube page to automatically fetch/display sports videos from an external source",
+          "integrate with external APIs to automatically populate fitness videos"
         ]
       },
       "acceptanceCriteria": [
-        "Backend can make HTTP requests to Nutritionix API for food search",
-        "Search returns foods with nutritional information (calories, protein, carbs, fat)",
-        "API integration handles authentication with Nutritionix API credentials",
-        "Error handling for API failures or invalid responses"
+        "Backend method calls external fitness video API with error handling",
+        "Returns array of videos with id, title, description, thumbnailUrl, videoUrl/embedUrl, uploader name, view count, and duration",
+        "API endpoint URL and credentials are configurable via initialization parameters",
+        "Handles API failures gracefully and returns empty array or error indicator"
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "id": "REQ-61",
+      "text": "Create React Query hook useGetExternalFitnessVideos in frontend/src/hooks/useGetExternalFitnessVideos.ts that calls the backend method to fetch external sports and fitness videos. Include proper TypeScript typing for video results, error handling, and enable the query only when the actor is available. Follow the pattern of existing video hooks.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-recent"
         ],
         "quotes": [
-          "React Query hooks for food operations"
+          "FiTube page to automatically fetch/display sports videos from an external source"
         ]
       },
       "acceptanceCriteria": [
-        "useSearchFoods hook for searching foods by name",
-        "useLogFood mutation hook for adding food entries",
-        "useGetFoodDiary query hook for retrieving logged foods",
-        "Hooks follow the existing pattern in frontend/src/hooks directory",
-        "Query invalidation occurs after successful mutations"
+        "Hook fetches external fitness videos via backend method",
+        "Returns properly typed video array with id, title, description, thumbnailUrl, videoUrl, uploader, viewCount, duration",
+        "Includes loading, error, and success states",
+        "Query is enabled only when actor is available"
       ]
     },
     {
-      "id": "REQ-6",
-      "text": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+      "id": "REQ-62",
+      "text": "Update the FiTube page (frontend/src/pages/FiTube.tsx) to display external sports and fitness videos fetched from the external API on the main video browsing page at /fitube. Display videos in a grid layout showing video thumbnails, titles, uploader names, and view counts. Each video card should be clickable and navigate to a detail view or open the external video URL. Maintain the existing video upload functionality for internal videos if needed, or clearly distinguish between internal and external videos.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-recent"
         ],
         "quotes": [
-          "This simplified version will get the Food Tracker working",
-          "integrate seamlessly with your existing FIT AMIGO navigation"
+          "FiTube page to automatically fetch/display sports videos from an external source",
+          "Videos will appear on the main FiTube browsing page at /fitube"
         ]
       },
       "acceptanceCriteria": [
-        "Food link appears in the main navigation menu",
-        "Link is visible in both desktop and mobile views",
-        "Navigation follows existing pattern in Navigation.tsx",
-        "Link routes to /food page"
+        "FiTube main page displays external fitness videos in grid layout",
+        "Each video shows thumbnail, title, uploader name, and view count",
+        "Videos are clickable and navigate to detail view or open external URL",
+        "External videos are visually distinguished from internal uploaded videos (if both are shown)",
+        "Loading and error states are handled appropriately"
+      ]
+    },
+    {
+      "id": "REQ-63",
+      "text": "Add configuration instructions to frontend/README.md for the external sports products API, including environment variable placeholders for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as the existing Go Store API and Fitness Search API configuration instructions.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "integrate with external APIs to automatically populate sports products",
+          "Both integrations will use environment variables for API credentials that you'll configure post-deployment"
+        ]
+      },
+      "acceptanceCriteria": [
+        "README.md includes section for sports products API configuration",
+        "Documents VITE_SPORTS_PRODUCTS_API_URL environment variable",
+        "Documents VITE_SPORTS_PRODUCTS_API_KEY environment variable",
+        "Follows same documentation pattern as Go Store API and Fitness Search API sections",
+        "Includes instructions for post-deployment configuration"
+      ]
+    },
+    {
+      "id": "REQ-64",
+      "text": "Add sports products API configuration to frontend/.env.example with placeholder values for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY, following the same pattern as the existing Go Store API and Fitness Search API environment variables.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "Both integrations will use environment variables for API credentials that you'll configure post-deployment"
+        ]
+      },
+      "acceptanceCriteria": [
+        ".env.example includes VITE_SPORTS_PRODUCTS_API_URL with placeholder value",
+        ".env.example includes VITE_SPORTS_PRODUCTS_API_KEY with placeholder value",
+        "Follows existing environment variable naming and format conventions"
+      ]
+    },
+    {
+      "id": "REQ-65",
+      "text": "Add configuration instructions to frontend/README.md for the external fitness videos API, including environment variable placeholders for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as other external API configurations.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "FiTube page to automatically fetch/display sports videos from an external source",
+          "Both integrations will use environment variables for API credentials that you'll configure post-deployment"
+        ]
+      },
+      "acceptanceCriteria": [
+        "README.md includes section for fitness videos API configuration",
+        "Documents VITE_FITNESS_VIDEOS_API_URL environment variable",
+        "Documents VITE_FITNESS_VIDEOS_API_KEY environment variable",
+        "Follows same documentation pattern as other API configuration sections",
+        "Includes instructions for post-deployment configuration"
+      ]
+    },
+    {
+      "id": "REQ-66",
+      "text": "Add fitness videos API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY, following the same pattern as existing external API environment variables.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-recent"
+        ],
+        "quotes": [
+          "Both integrations will use environment variables for API credentials that you'll configure post-deployment"
+        ]
+      },
+      "acceptanceCriteria": [
+        ".env.example includes VITE_FITNESS_VIDEOS_API_URL with placeholder value",
+        ".env.example includes VITE_FITNESS_VIDEOS_API_KEY with placeholder value",
+        "Follows existing environment variable naming and format conventions"
       ]
     }
   ],
   "constraints": [
-    "Do not implement AI camera-based food recognition - only manual search and logging",
-    "Follow the single-actor architecture pattern in backend/main.mo",
-    "Use React Query for all data fetching operations",
-    "Maintain consistency with existing FIT AMIGO navigation and visual theme",
-    "Do not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
+    "Use existing fetchExternalProducts pattern for implementing the sports products API integration",
+    "Maintain single-actor backend architecture with all logic in main.mo",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui/*",
+    "Follow existing external API integration patterns (Go Store API, Fitness Search API)",
+    "API credentials must be configurable via environment variables post-deployment"
   ],
   "nonGoals": [
-    "AI-powered food recognition from camera photos",
-    "Image upload functionality for foods",
-    "Barcode scanning",
-    "Meal planning features",
-    "Recipe management",
-    "Social sharing of meals",
-    "Advanced nutritional analytics or charts"
+    "Removing or replacing existing internal product management features in admin dashboard",
+    "Implementing real-time video streaming or live content",
+    "Creating custom video player components (use existing video player patterns)",
+    "Integrating with specific third-party services like YouTube API or Amazon Product API (generic API pattern)",
+    "Building native mobile applications"
   ],
   "imageRequirements": {
     "required": [],

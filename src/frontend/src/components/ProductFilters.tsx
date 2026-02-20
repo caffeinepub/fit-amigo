@@ -27,8 +27,11 @@ export default function ProductFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="equipment">Sports Equipment</SelectItem>
+            <SelectItem value="gym-equipment">Gym Equipment</SelectItem>
+            <SelectItem value="running-gear">Running Gear</SelectItem>
+            <SelectItem value="sports-apparel">Sports Apparel</SelectItem>
             <SelectItem value="supplements">Supplements</SelectItem>
+            <SelectItem value="equipment">Sports Equipment</SelectItem>
           </SelectContent>
         </Select>
       </div>

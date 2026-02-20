@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSearchProducts } from '../hooks/useSearchProducts';
 import { useGetExternalProducts } from '../hooks/useGetExternalProducts';
+import { useGetExternalSportsProducts } from '../hooks/useGetExternalSportsProducts';
 import ProductCard from '../components/ProductCard';
 import ProductFilters from '../components/ProductFilters';
 import { useAddToCart } from '../hooks/useAddToCart';
@@ -10,6 +11,7 @@ import { toast } from 'sonner';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import type { Product } from '../backend';
 import type { ExternalProduct } from '../types/ExternalProduct';
+import type { ExternalSportsProduct } from '../hooks/useGetExternalSportsProducts';
 
 export default function Store() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,23 +20,48 @@ export default function Store() {
   const { identity } = useInternetIdentity();
   
   const { data: internalProducts = [], isLoading: internalLoading } = useSearchProducts(searchTerm);
-  const { data: externalProducts = [], isLoading: externalLoading, error: externalError } = useGetExternalProducts();
+  const { data: externalProducts = [], isLoading: externalLoading } = useGetExternalProducts();
+  
+  // Map category filter for sports products API
+  const sportsCategory = category !== 'all' ? category : undefined;
+  const { data: sportsProducts = [], isLoading: sportsLoading } = useGetExternalSportsProducts(
+    sportsCategory,
+    searchTerm || undefined
+  );
+  
   const addToCart = useAddToCart();
 
-  const isLoading = internalLoading || externalLoading;
+  const isLoading = internalLoading || externalLoading || sportsLoading;
 
-  // Merge internal and external products
-  const allProducts: (Product | ExternalProduct)[] = [...internalProducts, ...externalProducts];
+  // Merge all product sources
+  const allProducts: (Product | ExternalProduct | ExternalSportsProduct)[] = [
+    ...internalProducts,
+    ...externalProducts,
+    ...sportsProducts,
+  ];
 
   const filteredProducts = allProducts.filter((product) => {
     const isExternal = 'isExternal' in product && product.isExternal;
     const productName = product.name.toLowerCase();
+    const productCategory = 'category' in product ? product.category : '';
     
-    const categoryMatch =
-      category === 'all' ||
-      (category === 'equipment' && !productName.includes('supplement')) ||
-      (category === 'supplements' && productName.includes('supplement'));
+    // Category filtering
+    let categoryMatch = category === 'all';
+    if (!categoryMatch) {
+      if (category === 'gym-equipment') {
+        categoryMatch = productCategory === 'gym-equipment' || productName.includes('gym') || productName.includes('equipment');
+      } else if (category === 'running-gear') {
+        categoryMatch = productCategory === 'running-gear' || productName.includes('running') || productName.includes('run');
+      } else if (category === 'sports-apparel') {
+        categoryMatch = productCategory === 'sports-apparel' || productName.includes('apparel') || productName.includes('clothing');
+      } else if (category === 'supplements') {
+        categoryMatch = productCategory === 'supplements' || productName.includes('supplement') || productName.includes('protein');
+      } else if (category === 'equipment') {
+        categoryMatch = productCategory === 'equipment' || (!productName.includes('supplement'));
+      }
+    }
 
+    // Price filtering
     const price = isExternal ? product.price : Number(product.price);
     const priceMatch = !maxPrice || price <= Number(maxPrice);
 

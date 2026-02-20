@@ -1,90 +1,119 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T11:13:40.880Z",
+  "generatedAt": "2026-02-20T14:16:33.330Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 4,
+    "total": 10,
+    "implemented": 8,
     "items": [
       {
-        "id": "REQ-1",
-        "summary": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/FoodTracker.tsx",
-          "frontend/src/components/FoodEntryCard.tsx",
-          "frontend/src/components/MacroSummaryCard.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/FoodTracker.tsx",
-          "frontend/src/components/FoodEntryCard.tsx",
-          "frontend/src/components/MacroSummaryCard.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/AddFood.tsx",
-          "frontend/src/components/FoodSearchResults.tsx",
-          "frontend/src/components/ServingSizeForm.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/AddFood.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Implement backend methods to store food entries with fields for food name, calories, protein, carbs, fat, serving size, and timestamp, and retrieve all food entries for the authenticated user",
+        "id": "REQ-57",
+        "summary": "Create backend method in main.mo to fetch external sports products (gym equipment, running gear, sports apparel, supplements) from a configurable external API endpoint. The method should accept optional category and search filters, call the external API with proper error handling, parse the JSON response, and return an array of products with fields: id, name, description, price, imageUrl, category, and externalProductUrl. Follow the same pattern as the existing fetchExternalProducts method for Go Store API.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-4",
-        "summary": "Integrate with Nutritionix API to search for foods by name and fetch detailed nutritional data including calories, protein, carbs, and fat in grams",
+        "id": "REQ-58",
+        "summary": "Create React Query hook useGetExternalSportsProducts in frontend/src/hooks/useGetExternalSportsProducts.ts that calls the backend method to fetch external sports products. Include optional category filter parameter, proper TypeScript typing for product results, error handling, and enable the query only when the actor is available. Follow the same pattern as useGetExternalProducts hook.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useGetExternalSportsProducts.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useGetExternalSportsProducts.ts"
+        ]
+      },
+      {
+        "id": "REQ-59",
+        "summary": "Update the Store page (frontend/src/pages/Store.tsx) to display external sports products fetched from the new external API instead of or alongside the existing Go Store products. Each product card should show the product photo, name, price, and a button/link that opens the external product URL in a new tab. Remove or hide internal product management features (add to cart) for external products. Include category filtering for gym equipment, running gear, sports apparel, and supplements.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/Store.tsx",
+          "frontend/src/components/ProductFilters.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/Store.tsx",
+          "frontend/src/components/ProductFilters.tsx"
+        ]
+      },
+      {
+        "id": "REQ-60",
+        "summary": "Create backend method in main.mo to fetch sports and fitness videos from a configurable external video API endpoint. The method should call the external API with proper error handling, parse the JSON response, and return an array of videos with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, view count, and duration. Follow similar patterns to existing external API integrations.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-5",
-        "summary": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+        "id": "REQ-61",
+        "summary": "Create React Query hook useGetExternalFitnessVideos in frontend/src/hooks/useGetExternalFitnessVideos.ts that calls the backend method to fetch external sports and fitness videos. Include proper TypeScript typing for video results, error handling, and enable the query only when the actor is available. Follow the pattern of existing video hooks.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useSearchFoods.ts",
-          "frontend/src/hooks/useLogFood.ts",
-          "frontend/src/hooks/useGetUserFoodEntries.ts",
-          "frontend/src/hooks/useDeleteFoodEntry.ts",
-          "frontend/src/hooks/useEditFoodEntry.ts",
-          "frontend/src/hooks/useGetFoodEntry.ts"
+          "frontend/src/hooks/useGetExternalFitnessVideos.ts"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useLogFood.ts",
-          "frontend/src/hooks/useGetUserFoodEntries.ts",
-          "frontend/src/hooks/useDeleteFoodEntry.ts",
-          "frontend/src/hooks/useEditFoodEntry.ts",
-          "frontend/src/hooks/useGetFoodEntry.ts"
+          "frontend/src/hooks/useGetExternalFitnessVideos.ts"
         ]
       },
       {
-        "id": "REQ-6",
-        "summary": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+        "id": "REQ-62",
+        "summary": "Update the FiTube page (frontend/src/pages/FiTube.tsx) to display external sports and fitness videos fetched from the external API on the main video browsing page at /fitube. Display videos in a grid layout showing video thumbnails, titles, uploader names, and view counts. Each video card should be clickable and navigate to a detail view or open the external video URL. Maintain the existing video upload functionality for internal videos if needed, or clearly distinguish between internal and external videos.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Navigation.tsx"
+          "frontend/src/pages/FiTube.tsx",
+          "frontend/src/components/VideoCard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Navigation.tsx"
+          "frontend/src/pages/FiTube.tsx",
+          "frontend/src/components/VideoCard.tsx"
+        ]
+      },
+      {
+        "id": "REQ-63",
+        "summary": "Add configuration instructions to frontend/README.md for the external sports products API, including environment variable placeholders for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as the existing Go Store API and Fitness Search API configuration instructions.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/README.md"
+        ],
+        "matchedFiles": [
+          "frontend/README.md"
+        ]
+      },
+      {
+        "id": "REQ-64",
+        "summary": "Add sports products API configuration to frontend/.env.example with placeholder values for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY, following the same pattern as the existing Go Store API and Fitness Search API environment variables.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/.env.example"
+        ],
+        "matchedFiles": [
+          "frontend/.env.example"
+        ]
+      },
+      {
+        "id": "REQ-65",
+        "summary": "Add configuration instructions to frontend/README.md for the external fitness videos API, including environment variable placeholders for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as other external API configurations.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/README.md"
+        ],
+        "matchedFiles": [
+          "frontend/README.md"
+        ]
+      },
+      {
+        "id": "REQ-66",
+        "summary": "Add fitness videos API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY, following the same pattern as existing external API environment variables.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/.env.example"
+        ],
+        "matchedFiles": [
+          "frontend/.env.example"
         ]
       }
     ]
@@ -95,21 +124,20 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
+    "frontend/.env.example",
+    "frontend/README.md",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/FoodEntryCard.tsx",
-    "frontend/src/components/MacroSummaryCard.tsx",
-    "frontend/src/components/Navigation.tsx",
+    "frontend/src/components/ProductCard.tsx",
+    "frontend/src/components/ProductFilters.tsx",
+    "frontend/src/components/VideoCard.tsx",
+    "frontend/src/config/api.ts",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useDeleteFoodEntry.ts",
-    "frontend/src/hooks/useEditFoodEntry.ts",
-    "frontend/src/hooks/useGetFoodEntry.ts",
-    "frontend/src/hooks/useGetUserFoodEntries.ts",
-    "frontend/src/hooks/useLogFood.ts",
-    "frontend/src/pages/AddFood.tsx",
-    "frontend/src/pages/FoodTracker.tsx",
+    "frontend/src/hooks/useGetExternalFitnessVideos.ts",
+    "frontend/src/hooks/useGetExternalSportsProducts.ts",
+    "frontend/src/pages/FiTube.tsx",
+    "frontend/src/pages/Store.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

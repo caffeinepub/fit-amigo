@@ -9,7 +9,8 @@ export function useDeleteProduct() {
   return useMutation({
     mutationFn: async (id: ProductId) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.deleteProduct(id);
+      // Backend method not yet implemented
+      throw new Error('deleteProduct method not yet implemented in backend');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });

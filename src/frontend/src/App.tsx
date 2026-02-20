@@ -11,6 +11,7 @@ import WorkoutTracker from './pages/WorkoutTracker';
 import AddWorkout from './pages/AddWorkout';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProductManagement from './pages/AdminProductManagement';
+import AdminNewsManagement from './pages/AdminNewsManagement';
 import FiTube from './pages/FiTube';
 import VideoDetail from './pages/VideoDetail';
 import UploadVideo from './pages/UploadVideo';
@@ -18,6 +19,7 @@ import RunningMonitor from './pages/RunningMonitor';
 import AddRunningSession from './pages/AddRunningSession';
 import FoodTracker from './pages/FoodTracker';
 import AddFood from './pages/AddFood';
+import SearchResults from './pages/SearchResults';
 import ComingSoon from './components/ComingSoon';
 
 const rootRoute = createRootRoute({
@@ -100,6 +102,12 @@ const adminProductManagementRoute = createRoute({
   component: AdminProductManagement,
 });
 
+const adminNewsManagementRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/news',
+  component: AdminNewsManagement,
+});
+
 const fitubeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/fitube',
@@ -151,7 +159,7 @@ const newsRoute = createRoute({
 const searchRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/search',
-  component: () => <ComingSoon featureName="Search" description="Search the web for fitness information" />,
+  component: SearchResults,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -167,6 +175,7 @@ const routeTree = rootRoute.addChildren([
   addWorkoutRoute,
   adminDashboardRoute,
   adminProductManagementRoute,
+  adminNewsManagementRoute,
   fitubeRoute,
   videoDetailRoute,
   uploadVideoRoute,

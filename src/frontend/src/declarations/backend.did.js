@@ -19,6 +19,11 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
 export const FoodEntryInput = IDL.Record({
   'fat' : IDL.Float64,
   'carbs' : IDL.Float64,
@@ -27,23 +32,33 @@ export const FoodEntryInput = IDL.Record({
   'foodName' : IDL.Text,
   'protein' : IDL.Float64,
 });
-export const ExternalBlob = IDL.Vec(IDL.Nat8);
-export const ProductDetails = IDL.Record({
-  'name' : IDL.Text,
-  'description' : IDL.Text,
-  'quantity' : IDL.Nat,
-  'image' : IDL.Opt(ExternalBlob),
-  'price' : IDL.Nat,
+export const ArticleId = IDL.Nat;
+export const ArticleType = IDL.Variant({
+  'internal' : IDL.Null,
+  'external' : IDL.Null,
 });
-export const ProductId = IDL.Nat;
-export const CartItem = IDL.Record({
-  'productId' : ProductId,
-  'quantity' : IDL.Nat,
+export const UserId = IDL.Principal;
+export const NewsCategory = IDL.Variant({
+  'trainingAdvice' : IDL.Null,
+  'productReviews' : IDL.Null,
+  'fitnessLifestyle' : IDL.Null,
+  'mentalHealth' : IDL.Null,
+  'sportsNews' : IDL.Null,
+  'workoutTips' : IDL.Null,
+  'nutrition' : IDL.Null,
 });
-export const UserRole = IDL.Variant({
-  'admin' : IDL.Null,
-  'user' : IDL.Null,
-  'guest' : IDL.Null,
+export const NewsArticle = IDL.Record({
+  'id' : ArticleId,
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+  'articleType' : ArticleType,
+  'creationTimestamp' : IDL.Int,
+  'creatorUserId' : UserId,
+  'author' : IDL.Text,
+  'featuredImageUrl' : IDL.Text,
+  'publicationDate' : IDL.Int,
+  'category' : NewsCategory,
+  'externalUrl' : IDL.Opt(IDL.Text),
 });
 export const RunningSession = IDL.Record({
   'duration' : IDL.Nat,
@@ -53,6 +68,7 @@ export const RunningSession = IDL.Record({
   'timestamp' : IDL.Int,
   'runId' : IDL.Nat,
 });
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const Video = IDL.Record({
   'id' : IDL.Nat,
   'title' : IDL.Text,
@@ -62,6 +78,15 @@ export const Video = IDL.Record({
   'uploadTimestamp' : IDL.Int,
   'commentCount' : IDL.Nat,
   'uploaderId' : IDL.Principal,
+});
+export const ArticleSummary = IDL.Record({
+  'id' : ArticleId,
+  'title' : IDL.Text,
+  'articleType' : ArticleType,
+  'author' : IDL.Text,
+  'featuredImageUrl' : IDL.Text,
+  'publicationDate' : IDL.Int,
+  'category' : NewsCategory,
 });
 export const UserProfile = IDL.Record({
   'name' : IDL.Text,
@@ -85,7 +110,11 @@ export const OrderStatus = IDL.Variant({
   'delivered' : IDL.Null,
   'processing' : IDL.Null,
 });
-export const UserId = IDL.Principal;
+export const ProductId = IDL.Nat;
+export const CartItem = IDL.Record({
+  'productId' : ProductId,
+  'quantity' : IDL.Nat,
+});
 export const Order = IDL.Record({
   'id' : OrderId,
   'status' : OrderStatus,
@@ -115,6 +144,13 @@ export const Workout = IDL.Record({
   'reps' : IDL.Nat,
   'sets' : IDL.Nat,
   'exerciseName' : IDL.Text,
+});
+export const SearchResult = IDL.Record({
+  'itemId' : IDL.Nat,
+  'title' : IDL.Text,
+  'contentType' : IDL.Text,
+  'relevanceScore' : IDL.Float64,
+  'previewText' : IDL.Text,
 });
 export const http_header = IDL.Record({
   'value' : IDL.Text,
@@ -163,24 +199,35 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-  'addComment' : IDL.Func([IDL.Nat, IDL.Text], [IDL.Nat], []),
-  'addFoodEntry' : IDL.Func([FoodEntryInput], [IDL.Nat], []),
-  'addProduct' : IDL.Func([ProductDetails], [], []),
-  'addToCart' : IDL.Func([CartItem], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-  'deleteComment' : IDL.Func([IDL.Nat], [], []),
   'deleteFoodEntry' : IDL.Func([IDL.Nat], [], []),
-  'deleteProduct' : IDL.Func([ProductId], [], []),
   'deleteRunningSession' : IDL.Func([IDL.Nat], [], []),
   'editFoodEntry' : IDL.Func([IDL.Nat, FoodEntryInput], [], []),
-  'editProduct' : IDL.Func([ProductId, ProductDetails], [], []),
   'fetchExternalProducts' : IDL.Func([], [IDL.Text], []),
+  'fetchExternalSportsProducts' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [IDL.Text],
+      [],
+    ),
+  'fetchSportsAndFitnessVideos' : IDL.Func([], [IDL.Text], []),
+  'getAllArticlesSortedByPublicationDate' : IDL.Func(
+      [],
+      [IDL.Vec(NewsArticle)],
+      ['query'],
+    ),
+  'getAllNewsArticles' : IDL.Func(
+      [IDL.Opt(NewsCategory)],
+      [IDL.Vec(NewsArticle)],
+      ['query'],
+    ),
   'getAllRunningSessions' : IDL.Func([], [IDL.Vec(RunningSession)], ['query']),
   'getAllVideos' : IDL.Func([], [IDL.Vec(Video)], ['query']),
+  'getArticleSummaries' : IDL.Func([], [IDL.Vec(ArticleSummary)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-  'getCart' : IDL.Func([], [IDL.Vec(CartItem)], ['query']),
+  'getExternalFitnessSearchResults' : IDL.Func([IDL.Text], [IDL.Text], []),
   'getFoodEntry' : IDL.Func([IDL.Nat], [IDL.Opt(FoodEntry)], ['query']),
+  'getNewsArticle' : IDL.Func([ArticleId], [IDL.Opt(NewsArticle)], ['query']),
   'getOrder' : IDL.Func([OrderId], [Order], ['query']),
   'getProduct' : IDL.Func([ProductId], [Product], ['query']),
   'getRunningSession' : IDL.Func(
@@ -197,13 +244,11 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getUserRunningSessions' : IDL.Func([], [IDL.Vec(RunningSession)], ['query']),
-  'getVideo' : IDL.Func([IDL.Nat], [IDL.Opt(Video)], ['query']),
   'getVideoComments' : IDL.Func([IDL.Nat], [IDL.Vec(Comment)], ['query']),
   'getVideoLikeCount' : IDL.Func([IDL.Nat], [IDL.Nat], ['query']),
   'getWorkouts' : IDL.Func([], [IDL.Vec(Workout)], ['query']),
   'hasLikedVideo' : IDL.Func([IDL.Nat], [IDL.Bool], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-  'likeVideo' : IDL.Func([IDL.Nat], [], []),
   'logRunningSession' : IDL.Func(
       [IDL.Float64, IDL.Nat, IDL.Opt(IDL.Text)],
       [IDL.Nat],
@@ -212,13 +257,13 @@ export const idlService = IDL.Service({
   'logWorkout' : IDL.Func([Workout], [], []),
   'placeOrder' : IDL.Func([IDL.Text], [OrderId], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'searchContent' : IDL.Func([IDL.Text], [IDL.Vec(SearchResult)], ['query']),
   'searchProducts' : IDL.Func([IDL.Text], [IDL.Vec(Product)], ['query']),
   'transform' : IDL.Func(
       [TransformationInput],
       [TransformationOutput],
       ['query'],
     ),
-  'unlikeVideo' : IDL.Func([IDL.Nat], [], []),
   'uploadVideo' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [IDL.Nat], []),
 });
 
@@ -236,6 +281,11 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
   const FoodEntryInput = IDL.Record({
     'fat' : IDL.Float64,
     'carbs' : IDL.Float64,
@@ -244,23 +294,33 @@ export const idlFactory = ({ IDL }) => {
     'foodName' : IDL.Text,
     'protein' : IDL.Float64,
   });
-  const ExternalBlob = IDL.Vec(IDL.Nat8);
-  const ProductDetails = IDL.Record({
-    'name' : IDL.Text,
-    'description' : IDL.Text,
-    'quantity' : IDL.Nat,
-    'image' : IDL.Opt(ExternalBlob),
-    'price' : IDL.Nat,
+  const ArticleId = IDL.Nat;
+  const ArticleType = IDL.Variant({
+    'internal' : IDL.Null,
+    'external' : IDL.Null,
   });
-  const ProductId = IDL.Nat;
-  const CartItem = IDL.Record({
-    'productId' : ProductId,
-    'quantity' : IDL.Nat,
+  const UserId = IDL.Principal;
+  const NewsCategory = IDL.Variant({
+    'trainingAdvice' : IDL.Null,
+    'productReviews' : IDL.Null,
+    'fitnessLifestyle' : IDL.Null,
+    'mentalHealth' : IDL.Null,
+    'sportsNews' : IDL.Null,
+    'workoutTips' : IDL.Null,
+    'nutrition' : IDL.Null,
   });
-  const UserRole = IDL.Variant({
-    'admin' : IDL.Null,
-    'user' : IDL.Null,
-    'guest' : IDL.Null,
+  const NewsArticle = IDL.Record({
+    'id' : ArticleId,
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+    'articleType' : ArticleType,
+    'creationTimestamp' : IDL.Int,
+    'creatorUserId' : UserId,
+    'author' : IDL.Text,
+    'featuredImageUrl' : IDL.Text,
+    'publicationDate' : IDL.Int,
+    'category' : NewsCategory,
+    'externalUrl' : IDL.Opt(IDL.Text),
   });
   const RunningSession = IDL.Record({
     'duration' : IDL.Nat,
@@ -270,6 +330,7 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : IDL.Int,
     'runId' : IDL.Nat,
   });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
   const Video = IDL.Record({
     'id' : IDL.Nat,
     'title' : IDL.Text,
@@ -279,6 +340,15 @@ export const idlFactory = ({ IDL }) => {
     'uploadTimestamp' : IDL.Int,
     'commentCount' : IDL.Nat,
     'uploaderId' : IDL.Principal,
+  });
+  const ArticleSummary = IDL.Record({
+    'id' : ArticleId,
+    'title' : IDL.Text,
+    'articleType' : ArticleType,
+    'author' : IDL.Text,
+    'featuredImageUrl' : IDL.Text,
+    'publicationDate' : IDL.Int,
+    'category' : NewsCategory,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text, 'email' : IDL.Text });
   const FoodEntry = IDL.Record({
@@ -299,7 +369,11 @@ export const idlFactory = ({ IDL }) => {
     'delivered' : IDL.Null,
     'processing' : IDL.Null,
   });
-  const UserId = IDL.Principal;
+  const ProductId = IDL.Nat;
+  const CartItem = IDL.Record({
+    'productId' : ProductId,
+    'quantity' : IDL.Nat,
+  });
   const Order = IDL.Record({
     'id' : OrderId,
     'status' : OrderStatus,
@@ -329,6 +403,13 @@ export const idlFactory = ({ IDL }) => {
     'reps' : IDL.Nat,
     'sets' : IDL.Nat,
     'exerciseName' : IDL.Text,
+  });
+  const SearchResult = IDL.Record({
+    'itemId' : IDL.Nat,
+    'title' : IDL.Text,
+    'contentType' : IDL.Text,
+    'relevanceScore' : IDL.Float64,
+    'previewText' : IDL.Text,
   });
   const http_header = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
   const http_request_result = IDL.Record({
@@ -374,28 +455,39 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
-    'addComment' : IDL.Func([IDL.Nat, IDL.Text], [IDL.Nat], []),
-    'addFoodEntry' : IDL.Func([FoodEntryInput], [IDL.Nat], []),
-    'addProduct' : IDL.Func([ProductDetails], [], []),
-    'addToCart' : IDL.Func([CartItem], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
-    'deleteComment' : IDL.Func([IDL.Nat], [], []),
     'deleteFoodEntry' : IDL.Func([IDL.Nat], [], []),
-    'deleteProduct' : IDL.Func([ProductId], [], []),
     'deleteRunningSession' : IDL.Func([IDL.Nat], [], []),
     'editFoodEntry' : IDL.Func([IDL.Nat, FoodEntryInput], [], []),
-    'editProduct' : IDL.Func([ProductId, ProductDetails], [], []),
     'fetchExternalProducts' : IDL.Func([], [IDL.Text], []),
+    'fetchExternalSportsProducts' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [IDL.Text],
+        [],
+      ),
+    'fetchSportsAndFitnessVideos' : IDL.Func([], [IDL.Text], []),
+    'getAllArticlesSortedByPublicationDate' : IDL.Func(
+        [],
+        [IDL.Vec(NewsArticle)],
+        ['query'],
+      ),
+    'getAllNewsArticles' : IDL.Func(
+        [IDL.Opt(NewsCategory)],
+        [IDL.Vec(NewsArticle)],
+        ['query'],
+      ),
     'getAllRunningSessions' : IDL.Func(
         [],
         [IDL.Vec(RunningSession)],
         ['query'],
       ),
     'getAllVideos' : IDL.Func([], [IDL.Vec(Video)], ['query']),
+    'getArticleSummaries' : IDL.Func([], [IDL.Vec(ArticleSummary)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
-    'getCart' : IDL.Func([], [IDL.Vec(CartItem)], ['query']),
+    'getExternalFitnessSearchResults' : IDL.Func([IDL.Text], [IDL.Text], []),
     'getFoodEntry' : IDL.Func([IDL.Nat], [IDL.Opt(FoodEntry)], ['query']),
+    'getNewsArticle' : IDL.Func([ArticleId], [IDL.Opt(NewsArticle)], ['query']),
     'getOrder' : IDL.Func([OrderId], [Order], ['query']),
     'getProduct' : IDL.Func([ProductId], [Product], ['query']),
     'getRunningSession' : IDL.Func(
@@ -416,13 +508,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(RunningSession)],
         ['query'],
       ),
-    'getVideo' : IDL.Func([IDL.Nat], [IDL.Opt(Video)], ['query']),
     'getVideoComments' : IDL.Func([IDL.Nat], [IDL.Vec(Comment)], ['query']),
     'getVideoLikeCount' : IDL.Func([IDL.Nat], [IDL.Nat], ['query']),
     'getWorkouts' : IDL.Func([], [IDL.Vec(Workout)], ['query']),
     'hasLikedVideo' : IDL.Func([IDL.Nat], [IDL.Bool], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
-    'likeVideo' : IDL.Func([IDL.Nat], [], []),
     'logRunningSession' : IDL.Func(
         [IDL.Float64, IDL.Nat, IDL.Opt(IDL.Text)],
         [IDL.Nat],
@@ -431,13 +521,13 @@ export const idlFactory = ({ IDL }) => {
     'logWorkout' : IDL.Func([Workout], [], []),
     'placeOrder' : IDL.Func([IDL.Text], [OrderId], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'searchContent' : IDL.Func([IDL.Text], [IDL.Vec(SearchResult)], ['query']),
     'searchProducts' : IDL.Func([IDL.Text], [IDL.Vec(Product)], ['query']),
     'transform' : IDL.Func(
         [TransformationInput],
         [TransformationOutput],
         ['query'],
       ),
-    'unlikeVideo' : IDL.Func([IDL.Nat], [], []),
     'uploadVideo' : IDL.Func([IDL.Text, IDL.Text, ExternalBlob], [IDL.Nat], []),
   });
 };

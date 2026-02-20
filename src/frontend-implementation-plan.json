@@ -1,132 +1,154 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Food Tracker with manual search and logging",
+  "title": "Integrate external APIs for sports products in Store and fitness videos in FiTube",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown and a daily macro tracking summary",
+      "id": "REQ-58",
+      "summary": "Create React Query hook for fetching external sports products with category filtering",
       "acceptanceCriteria": [
-        "Food Tracker page is accessible at /food route",
-        "Page displays a list of all logged foods for the current user",
-        "Each food entry shows nutritional information: calories, protein (g), carbs (g), fat (g)",
-        "Daily summary section displays totals for calories, protein, carbs, and fat",
-        "Page requires authentication to access"
+        "Hook accepts optional category filter parameter",
+        "Returns properly typed external sports products array",
+        "Includes loading, error, and success states",
+        "Query is enabled only when actor is available",
+        "Follows existing useGetExternalProducts pattern"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/FoodTracker.tsx",
+          "path": "frontend/src/hooks/useGetExternalSportsProducts.ts",
           "operation": "create",
-          "description": "Create the main Food Tracker page component that displays the user's food diary with logged food entries and daily macro summary. The page retrieves food entries using the useGetUserFoodEntries hook and calculates daily totals for calories, protein, carbs, and fat. Include authentication check using useInternetIdentity to ensure only logged-in users can access. Display food entries in a card or table layout showing food name, serving size, and nutritional breakdown. Add a prominent button to navigate to /food/add for logging new foods. Show loading and empty states appropriately."
-        },
-        {
-          "path": "frontend/src/components/FoodEntryCard.tsx",
-          "operation": "create",
-          "description": "Create a reusable component for displaying individual food entries in the food diary. Show food name, serving size, timestamp, and nutritional information (calories, protein in grams, carbs in grams, fat in grams) in a card layout. Include edit and delete buttons for each entry that trigger the respective mutations. Use icons from lucide-react for visual clarity (e.g., Utensils icon for food, Trash for delete, Edit for edit)."
-        },
-        {
-          "path": "frontend/src/components/MacroSummaryCard.tsx",
-          "operation": "create",
-          "description": "Create a component that displays the daily macro tracking summary. Accept an array of food entries as props and calculate totals for calories, protein (g), carbs (g), and fat (g). Display these totals in a prominent card with visual indicators (progress bars or circular charts optional). Use a grid or flex layout to organize the macro totals clearly."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add the /food route to the TanStack Router configuration to render the FoodTracker page component. Ensure the route follows the existing pattern used for other feature routes like /fitube, /workout, and /running."
+          "description": "Create React Query hook that calls actor.fetchExternalSportsProducts with optional category and search filters. Parse the JSON response to transform external sports products data into ExternalProduct format with id, name, description, price, imageUrl, category, and externalProductUrl fields. Follow the same pattern as useGetExternalProducts.ts including error handling and enabled conditions. Accepts optional categoryFilter and searchTerm parameters."
         }
       ]
     },
     {
-      "id": "REQ-2",
-      "summary": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+      "id": "REQ-59",
+      "summary": "Update Store page to display external sports products with category filtering and external links",
       "acceptanceCriteria": [
-        "Add Food page includes a search input field for food names",
-        "Search results display foods with nutritional information from Nutritionix API",
-        "User can select a food from search results",
-        "User can specify serving size/quantity before logging",
-        "Logged food is saved and appears in the food diary",
-        "Page includes navigation back to the Food Tracker"
+        "Store page displays external sports products with photos, names, and prices",
+        "Each external product has a clickable link/button that opens the external product URL in a new tab",
+        "Category filter includes options for gym equipment, running gear, sports apparel, and supplements",
+        "External products are clearly distinguished from any internal products (if still shown)",
+        "Product cards use the existing ProductCard component pattern with isExternal flag"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/AddFood.tsx",
-          "operation": "create",
-          "description": "Create the Add Food page component with a search interface for finding foods. Include a search input field that triggers the useSearchFoods hook with debouncing (300-500ms) to search the Nutritionix API via the backend. Display search results in a list or grid showing food name and nutritional information. When a user selects a food from results, show a form to specify serving size/quantity. Include a submit button that calls the useLogFood mutation hook to save the food entry. Add a back button or link to navigate to /food. Show loading states during search and submission, and handle empty results appropriately."
-        },
-        {
-          "path": "frontend/src/components/FoodSearchResults.tsx",
-          "operation": "create",
-          "description": "Create a component that displays search results from the food search query. Accept an array of food search results as props and render them in a clickable list or grid. Each result card should show food name, calories, protein, carbs, and fat. Include an onClick handler that allows the parent component to handle food selection. Show a message when no results are found."
-        },
-        {
-          "path": "frontend/src/components/ServingSizeForm.tsx",
-          "operation": "create",
-          "description": "Create a form component for specifying serving size when logging a food entry. Accept the selected food data as props and include an input field for serving size (numeric with unit label, e.g., grams or servings). Display the nutritional information that will be logged based on the serving size entered. Include a submit button that calls the onSubmit handler passed from the parent. Use react-hook-form for form validation to ensure serving size is a positive number."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/Store.tsx",
           "operation": "modify",
-          "description": "Add the /food/add route to the TanStack Router configuration to render the AddFood page component. Ensure the route follows the existing nested route pattern used for other feature sub-pages."
+          "description": "Import and use the useGetExternalSportsProducts hook to fetch external sports products. Update the product display logic to render both internal products (from existing hooks) and external sports products from the new API. Pass category filter to the hook. Ensure ProductCard components handle external products with the isExternal flag, displaying external links that open in new tabs instead of add-to-cart buttons. Update the category filter UI to include options for gym equipment, running gear, sports apparel, and supplements. Maintain existing search and price filtering functionality."
+        },
+        {
+          "path": "frontend/src/components/ProductFilters.tsx",
+          "operation": "modify",
+          "description": "Update the category dropdown to include new sports product categories: gym equipment, running gear, sports apparel, and supplements. Ensure the filter state properly triggers re-fetching of external sports products when category changes."
         }
       ]
     },
     {
-      "id": "REQ-5",
-      "summary": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "id": "REQ-61",
+      "summary": "Create React Query hook for fetching external fitness videos",
       "acceptanceCriteria": [
-        "useSearchFoods hook for searching foods by name",
-        "useLogFood mutation hook for adding food entries",
-        "useGetFoodDiary query hook for retrieving logged foods",
-        "Hooks follow the existing pattern in frontend/src/hooks directory",
-        "Query invalidation occurs after successful mutations"
+        "Hook fetches external fitness videos via backend method",
+        "Returns properly typed video array with id, title, description, thumbnailUrl, videoUrl, uploader, viewCount, duration",
+        "Includes loading, error, and success states",
+        "Query is enabled only when actor is available"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useSearchFoods.ts",
+          "path": "frontend/src/hooks/useGetExternalFitnessVideos.ts",
           "operation": "create",
-          "description": "Create a React Query hook for searching foods by name via the Nutritionix API through the backend. Accept a search term string parameter and use useQuery to call the backend searchFoods method (the backend will handle the Nutritionix API outcall). Enable the query only when the search term is non-empty and has at least 2 characters. Parse the JSON response returned from the backend and transform it into a usable format for the frontend. Return the query result with isLoading, error, and data states. Follow the existing hook pattern used in useGetProduct.ts and useSearchProducts.ts."
-        },
-        {
-          "path": "frontend/src/hooks/useLogFood.ts",
-          "operation": "create",
-          "description": "Create a React Query mutation hook for logging a food entry. Use useMutation to call the backend addFoodEntry method with FoodEntryInput parameters (foodName, calories, protein, carbs, fat, servingSize). On success, invalidate the 'userFoodEntries' query key to refresh the food diary. Follow the existing mutation pattern used in useLogWorkout.ts and useLogRunningSession.ts. Include error handling and return the mutation result with mutate, isLoading, and error states."
-        },
-        {
-          "path": "frontend/src/hooks/useGetUserFoodEntries.ts",
-          "operation": "create",
-          "description": "Create a React Query hook for retrieving the authenticated user's food entries. Use useQuery to call the backend getUserFoodEntries method with the query key 'userFoodEntries'. Enable the query only when the actor is available and the user is authenticated. Return the query result with isLoading, error, and data states. Follow the existing pattern used in useGetUserRunningSessions.ts and useGetWorkouts.ts."
-        },
-        {
-          "path": "frontend/src/hooks/useDeleteFoodEntry.ts",
-          "operation": "create",
-          "description": "Create a React Query mutation hook for deleting a food entry by ID. Use useMutation to call the backend deleteFoodEntry method with the entry ID parameter. On success, invalidate the 'userFoodEntries' query key to refresh the food diary. Follow the existing mutation pattern used in useDeleteRunningSession.ts. Include error handling and return the mutation result."
-        },
-        {
-          "path": "frontend/src/hooks/useEditFoodEntry.ts",
-          "operation": "create",
-          "description": "Create a React Query mutation hook for editing an existing food entry. Use useMutation to call the backend editFoodEntry method with entry ID and FoodEntryInput parameters. On success, invalidate the 'userFoodEntries' query key to refresh the food diary. Follow the existing mutation pattern used in useEditProduct.ts. Include error handling and return the mutation result."
-        },
-        {
-          "path": "frontend/src/hooks/useGetFoodEntry.ts",
-          "operation": "create",
-          "description": "Create a React Query hook for retrieving a specific food entry by ID. Use useQuery to call the backend getFoodEntry method with the entry ID parameter. Enable the query only when the actor is available and the entry ID is provided. Return the query result with isLoading, error, and data states. Follow the existing pattern used in useGetProduct.ts and useGetVideo.ts. This hook supports editing functionality."
+          "description": "Create React Query hook that calls actor.fetchSportsAndFitnessVideos to fetch external sports and fitness videos. Parse the JSON response to transform video data into a typed format with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, viewCount, and duration. Include proper error handling, loading states, and enable the query only when actor is available. Follow the pattern of existing video query hooks like useGetVideos.ts."
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Add Food Tracker navigation link to the main Navigation component alongside existing features",
+      "id": "REQ-62",
+      "summary": "Update FiTube page to display external fitness videos in grid layout with navigation to detail view",
       "acceptanceCriteria": [
-        "Food link appears in the main navigation menu",
-        "Link is visible in both desktop and mobile views",
-        "Navigation follows existing pattern in Navigation.tsx",
-        "Link routes to /food page"
+        "FiTube main page displays external fitness videos in grid layout",
+        "Each video shows thumbnail, title, uploader name, and view count",
+        "Videos are clickable and navigate to detail view or open external URL",
+        "External videos are visually distinguished from internal uploaded videos (if both are shown)",
+        "Loading and error states are handled appropriately"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Navigation.tsx",
+          "path": "frontend/src/pages/FiTube.tsx",
           "operation": "modify",
-          "description": "Add a 'Food' navigation link to the main navigation menu that routes to /food. Insert the link in the desktop navigation list between 'Running' and 'News' to maintain logical feature grouping. Also add the link to the mobile navigation menu in the same relative position. Use the Utensils icon from lucide-react for the Food link to maintain visual consistency with other navigation items. Follow the existing Link component pattern used for Store, FiTube, Workout, and Running."
+          "description": "Import and use the useGetExternalFitnessVideos hook to fetch external sports and fitness videos. Update the video display grid to render both internal videos (from existing useGetVideos hook) and external fitness videos from the new API. For external videos, ensure they are clickable and either navigate to a detail view or open the external videoUrl/embedUrl. Add visual indicators to distinguish external videos from internal uploads (e.g., external link icon badge). Handle loading and error states for both internal and external video sources. Maintain existing video upload button for internal content."
+        },
+        {
+          "path": "frontend/src/components/VideoCard.tsx",
+          "operation": "modify",
+          "description": "Update VideoCard component to handle external videos by accepting an optional isExternal flag and externalUrl prop. When isExternal is true, clicking the card should open the externalUrl in a new tab instead of navigating to the internal VideoDetail page. Add a visual indicator (e.g., small external link icon) to distinguish external videos. Ensure backward compatibility with existing internal video cards."
+        }
+      ]
+    },
+    {
+      "id": "REQ-63",
+      "summary": "Document external sports products API configuration in README.md",
+      "acceptanceCriteria": [
+        "README.md includes section for sports products API configuration",
+        "Documents VITE_SPORTS_PRODUCTS_API_URL environment variable",
+        "Documents VITE_SPORTS_PRODUCTS_API_KEY environment variable",
+        "Follows same documentation pattern as Go Store API and Fitness Search API sections",
+        "Includes instructions for post-deployment configuration"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/README.md",
+          "operation": "modify",
+          "description": "Add a new section for Sports Products API configuration following the same pattern as the existing Go Store API and Fitness Search API sections. Document the required environment variables VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY with placeholder examples. Include instructions explaining that these credentials must be configured post-deployment and how to set them in the deployment environment. Place this section alongside the other external API configuration sections."
+        }
+      ]
+    },
+    {
+      "id": "REQ-64",
+      "summary": "Add sports products API environment variables to .env.example",
+      "acceptanceCriteria": [
+        ".env.example includes VITE_SPORTS_PRODUCTS_API_URL with placeholder value",
+        ".env.example includes VITE_SPORTS_PRODUCTS_API_KEY with placeholder value",
+        "Follows existing environment variable naming and format conventions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/.env.example",
+          "operation": "modify",
+          "description": "Add VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY environment variable placeholders following the same format as the existing Go Store API and Fitness Search API variables. Use placeholder values like 'https://api.example.com/sports-products' and 'your-api-key-here' to match the existing pattern."
+        }
+      ]
+    },
+    {
+      "id": "REQ-65",
+      "summary": "Document external fitness videos API configuration in README.md",
+      "acceptanceCriteria": [
+        "README.md includes section for fitness videos API configuration",
+        "Documents VITE_FITNESS_VIDEOS_API_URL environment variable",
+        "Documents VITE_FITNESS_VIDEOS_API_KEY environment variable",
+        "Follows same documentation pattern as other API configuration sections",
+        "Includes instructions for post-deployment configuration"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/README.md",
+          "operation": "modify",
+          "description": "Add a new section for Fitness Videos API configuration following the same pattern as the existing external API documentation sections. Document the required environment variables VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY with placeholder examples. Include instructions explaining that these credentials must be configured post-deployment and how to set them in the deployment environment. Place this section alongside the other external API configuration sections."
+        }
+      ]
+    },
+    {
+      "id": "REQ-66",
+      "summary": "Add fitness videos API environment variables to .env.example",
+      "acceptanceCriteria": [
+        ".env.example includes VITE_FITNESS_VIDEOS_API_URL with placeholder value",
+        ".env.example includes VITE_FITNESS_VIDEOS_API_KEY with placeholder value",
+        "Follows existing environment variable naming and format conventions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/.env.example",
+          "operation": "modify",
+          "description": "Add VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY environment variable placeholders following the same format as the existing external API variables. Use placeholder values like 'https://api.example.com/fitness-videos' and 'your-api-key-here' to match the existing pattern."
         }
       ]
     }

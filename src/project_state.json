@@ -1,47 +1,421 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
-  "summary": "FIT AMIGO fitness platform with FiTube (video platform), Running Monitor (GPS tracking), and Food Tracker (manual search and logging with Nutritionix API)",
+  "projectStateVersion": 15,
+  "summary": "FIT AMIGO - A comprehensive fitness platform. Phase 1 includes user authentication, navigation structure, e-commerce store for sports products and supplements (product catalog, shopping cart, checkout, order management), and workout tracker (log exercise sessions with sets, reps, weights). Phase 2 includes hybrid product catalog showing both internal products and external products from Go Store API, and admin interface for product management. Phase 3 is split into sub-phases: Sub-phase 3.1 (FiTube video platform + Running Monitor) - completed, Sub-phase 3.2 (Food Tracker with AI-powered food recognition and Nutritionix API integration) - completed, Sub-phase 3.3 (Sports/Fitness News Section with external and internal articles + Web Search across all content) - completed. Now updating Store to exclusively show external sports products (gym equipment, running gear, sports apparel, supplements) fetched from external API with photos, prices, and external links, and updating FiTube to automatically fetch and display sports/fitness videos from external API.",
   "architectural_notes": [
-    "Nutritionix API integration for nutritional data lookup",
-    "Food diary system with daily macro tracking (calories, protein, carbs, fat)",
-    "Manual food search and logging functionality",
-    "Food Tracker accessible at /food route"
+    "Phase 1 focus: Authentication, navigation, e-commerce, and workout tracker",
+    "E-commerce modeled after Amazon/Flipkart with full cart and order management",
+    "FiTube will support both embedded external videos and direct user uploads with social features",
+    "Food tracker will integrate with external nutrition API (USDA FoodData Central)",
+    "Design uses vibrant, energetic fitness colors (avoiding blue/purple as primary)",
+    "Phased development approach to manage complexity",
+    "Phase 2 adds hybrid product catalog showing both internal and external (Go Store API) products",
+    "Admin interface for internal product management separate from external API products",
+    "Go Store API credentials and endpoint URL required in environment configuration",
+    "Phase 3 split into sub-phases: 3.1 (FiTube + Running Monitor), 3.2 (Food Tracker with AI food recognition), 3.3 (News Section + Web Search)"
   ],
   "known_issues": [
-    "AI camera-based food recognition deferred to future phase due to complexity"
+    "Previous full-build attempts failed due to complexity; using phased approach",
+    "Video uploads may have storage limitations",
+    "External nutrition API integration required for food tracker",
+    "Go Store API credentials and endpoint URL need to be configured post-deployment",
+    "AI-powered food recognition may require additional ML/AI services or APIs",
+    "Sub-phase 3.3 complexity requires splitting into smaller builds (news admin interface, then search)",
+    "Fitness-specific search API credentials and endpoint URL need to be configured post-deployment",
+    "Sports products API credentials and endpoint URL need to be configured post-deployment",
+    "Fitness video API credentials and endpoint URL need to be configured post-deployment"
   ],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-a-food-tracker-page-at-food-route-that-displays-a-food-diary-showing-all-logged-foods-with-nutritional-breakdown-calories-protein-carbs-fat-in-grams-and-a-daily-macro-tracking-summary-showing-total-calories-protein-carbs-and-fat",
-      "title": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
+      "id": "feature-implement-user-authentication-using-internet-identity-with-support-for-passkeys-google-apple-and-microsoft-login-methods",
+      "title": "Implement user authentication using Internet Identity with support for passkeys, Google, Apple, and Microsoft login methods",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-an-add-food-page-with-a-search-interface-where-users-can-search-for-foods-by-name-select-from-search-results-specify-serving-size-and-log-the-food-entry",
-      "title": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+      "id": "feature-create-a-cohesive-navigation-structure-connecting-all-platform-sections-with-a-modern-energetic-fitness-focused-visual-theme-using-vibrant-colors-avoiding-blue-and-purple-as-primary-colors",
+      "title": "Create a cohesive navigation structure connecting all platform sections with a modern, energetic fitness-focused visual theme using vibrant colors (avoiding blue and purple as primary colors)",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-react-query-hooks-for-food-operations-including-searching-foods-via-nutritionix-api-logging-food-entries-and-retrieving-user-s-food-diary",
-      "title": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "id": "feature-build-an-e-commerce-store-product-catalog-for-sports-products-and-supplements-with-product-listings-details-pages-and-product-search-filtering-capabilities",
+      "title": "Build an e-commerce store product catalog for sports products and supplements with product listings, details pages, and product search/filtering capabilities",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-shopping-cart-functionality-allowing-users-to-add-products-update-quantities-remove-items-and-view-cart-totals",
+      "title": "Implement shopping cart functionality allowing users to add products, update quantities, remove items, and view cart totals",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-checkout-process-with-order-form-for-shipping-information-and-order-confirmation",
+      "title": "Create checkout process with order form for shipping information and order confirmation",
       "reqIds": [
         "REQ-5"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-food-tracker-navigation-link-to-the-main-navigation-component-alongside-existing-features-store-fitube-workout-running",
-      "title": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+      "id": "feature-implement-order-management-system-allowing-users-to-view-order-history-with-order-details-status-tracking-and-order-summaries",
+      "title": "Implement order management system allowing users to view order history with order details, status tracking, and order summaries",
       "reqIds": [
         "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-workout-tracker-allowing-users-to-log-exercise-sessions-with-exercise-names-sets-reps-and-weights",
+      "title": "Build workout tracker allowing users to log exercise sessions with exercise names, sets, reps, and weights",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-and-implement-a-vibrant-energetic-visual-theme-for-the-entire-application-that-avoids-blue-and-purple-as-primary-colors-ensuring-consistency-across-all-sections",
+      "title": "Design and implement a vibrant, energetic visual theme for the entire application that avoids blue and purple as primary colors, ensuring consistency across all sections",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-modify-the-store-page-to-display-both-internal-products-existing-products-from-backend-and-external-products-fetched-from-the-go-store-api-on-the-same-page-with-clear-visual-distinction-between-product-types",
+      "title": "Modify the Store page to display both internal products (existing products from backend) and external products fetched from the Go Store API on the same page with clear visual distinction between product types",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-view-on-go-store-button-to-external-products-that-opens-the-external-store-website-link-in-a-new-tab",
+      "title": "Add 'View on Go Store' button to external products that opens the external store website link in a new tab",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-frontend-service-to-fetch-external-products-from-the-go-store-api-via-backend-with-typescript-typing-and-error-handling",
+      "title": "Create frontend service to fetch external products from the Go Store API via backend, with TypeScript typing and error handling",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-admin-dashboard-page-with-navigation-accessible-only-to-admin-users-for-managing-internal-products",
+      "title": "Build admin dashboard page with navigation accessible only to admin users for managing internal products",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-admin-product-management-interface-allowing-admins-to-add-new-products-with-image-upload-name-description-price-and-stock-quantity",
+      "title": "Create admin product management interface allowing admins to add new products with image upload, name, description, price, and stock quantity",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-edit-and-delete-functionality-to-admin-product-management-interface-for-modifying-or-removing-existing-internal-products",
+      "title": "Add edit and delete functionality to admin product management interface for modifying or removing existing internal products",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-configuration-instructions-for-go-store-api-endpoint-url-and-credentials-to-be-set-via-environment-variables-after-deployment",
+      "title": "Add configuration instructions for Go Store API endpoint URL and credentials to be set via environment variables after deployment",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-fitube-page-at-fitube-route-with-video-browsing-interface-displaying-all-videos-in-a-grid-layout-showing-video-thumbnails-or-video-player-preview-title-uploader-name-like-count-and-comment-count-for-each-video",
+      "title": "Create FiTube page at /fitube route with video browsing interface displaying all videos in a grid layout, showing video thumbnails (or video player preview), title, uploader name, like count, and comment count for each video",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-video-detail-page-at-fitube-videoid-route-with-video-player-supporting-both-embedded-urls-and-uploaded-video-files-video-information-title-description-uploader-upload-date-like-button-with-count-unlike-functionality-and-comments-section-displaying-all-comments-with-add-comment-form",
+      "title": "Create video detail page at /fitube/:videoId route with video player (supporting both embedded URLs and uploaded video files), video information (title, description, uploader, upload date), like button with count, unlike functionality, and comments section displaying all comments with add comment form",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-video-upload-page-at-fitube-upload-route-with-form-for-uploading-videos-including-fields-for-video-file-upload-with-progress-indicator-title-input-description-textarea-and-option-to-enter-embedded-video-url-instead-of-uploading-a-file",
+      "title": "Create video upload page at /fitube/upload route with form for uploading videos, including fields for video file upload (with progress indicator), title input, description textarea, and option to enter embedded video URL instead of uploading a file",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-video-sharing-functionality-on-video-detail-page-with-share-button-that-copies-the-video-url-to-clipboard-and-displays-a-success-toast-notification",
+      "title": "Implement video sharing functionality on video detail page with share button that copies the video URL to clipboard and displays a success toast notification",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hooks-for-fitube-functionality-including-usegetvideos-fetch-all-videos-usegetvideo-fetch-single-video-by-id-useuploadvideo-upload-video-with-file-or-url-uselikevideo-toggle-like-useaddcomment-add-comment-and-usedeletecomment-delete-comment",
+      "title": "Create React Query hooks for FiTube functionality including useGetVideos (fetch all videos), useGetVideo (fetch single video by ID), useUploadVideo (upload video with file or URL), useLikeVideo (toggle like), useAddComment (add comment), and useDeleteComment (delete comment)",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-running-monitor-page-at-running-route-with-hero-section-statistics-summary-showing-total-runs-total-distance-and-total-duration-and-a-list-grid-display-of-all-logged-runs-showing-distance-duration-date-and-optional-notes-for-each-run",
+      "title": "Create Running Monitor page at /running route with hero section, statistics summary showing total runs, total distance, and total duration, and a list/grid display of all logged runs showing distance, duration, date, and optional notes for each run",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-add-running-session-page-at-running-add-route-with-form-for-logging-runs-including-inputs-for-distance-numeric-with-unit-selector-for-km-miles-duration-numeric-input-for-minutes-date-picker-and-optional-notes-textarea",
+      "title": "Create add running session page at /running/add route with form for logging runs, including inputs for distance (numeric with unit selector for km/miles), duration (numeric input for minutes), date picker, and optional notes textarea",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hooks-for-running-monitor-functionality-including-usegetruns-fetch-all-runs-for-current-user-uselogrun-add-new-run-and-usedeleterun-delete-run",
+      "title": "Create React Query hooks for Running Monitor functionality including useGetRuns (fetch all runs for current user), useLogRun (add new run), and useDeleteRun (delete run)",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-app-tsx-router-configuration-to-include-routes-for-fitube-pages-fitube-fitube-videoid-fitube-upload-and-running-monitor-pages-running-running-add",
+      "title": "Update App.tsx router configuration to include routes for FiTube pages (/fitube, /fitube/:videoId, /fitube/upload) and Running Monitor pages (/running, /running/add)",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hooks-for-news-article-operations-including-usegetnewsarticles-fetch-all-articles-with-optional-category-filter-usegetnewsarticle-fetch-single-article-by-id-useaddnewsarticle-create-new-article-useeditnewsarticle-update-article-and-usedeletenewsarticle-delete-article",
+      "title": "Create React Query hooks for news article operations including useGetNewsArticles (fetch all articles with optional category filter), useGetNewsArticle (fetch single article by ID), useAddNewsArticle (create new article), useEditNewsArticle (update article), and useDeleteNewsArticle (delete article)",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-admin-news-management-page-at-admin-news-route-with-table-view-displaying-all-news-articles-showing-article-title-author-category-publication-date-article-type-internal-external-badge-and-action-buttons-for-edit-and-delete",
+      "title": "Create admin news management page at /admin/news route with table view displaying all news articles showing article title, author, category, publication date, article type (internal/external badge), and action buttons for edit and delete",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-add-news-article-dialog-form-with-fields-for-title-text-input-content-textarea-for-internal-articles-author-text-input-publication-date-date-picker-category-dropdown-with-options-workout-tips-nutrition-sports-news-etc-article-type-selector-internal-external-radio-buttons-or-dropdown-external-url-text-input-shown-only-when-external-type-selected-and-featured-image-upload-with-progress-indicator",
+      "title": "Create add news article dialog/form with fields for title (text input), content (textarea for internal articles), author (text input), publication date (date picker), category (dropdown with options: workout tips, nutrition, sports news, etc.), article type selector (internal/external radio buttons or dropdown), external URL (text input, shown only when external type selected), and featured image upload with progress indicator",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-edit-news-article-dialog-form-that-pre-populates-with-existing-article-data-and-allows-updating-all-fields-title-content-author-publication-date-category-article-type-external-url-featured-image-with-the-same-validation-and-ui-as-the-add-form",
+      "title": "Create edit news article dialog/form that pre-populates with existing article data and allows updating all fields (title, content, author, publication date, category, article type, external URL, featured image) with the same validation and UI as the add form",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-delete-confirmation-dialog-for-news-articles-with-article-title-display-and-confirm-cancel-buttons-triggering-article-deletion-on-confirmation",
+      "title": "Implement delete confirmation dialog for news articles with article title display and confirm/cancel buttons, triggering article deletion on confirmation",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-news-link-to-the-admin-dashboard-navigation-at-admin-route-that-links-to-the-news-management-page-at-admin-news",
+      "title": "Add News link to the admin dashboard navigation at /admin route that links to the news management page at /admin/news",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-app-tsx-router-configuration-to-include-route-for-admin-news-management-page-at-admin-news",
+      "title": "Update App.tsx router configuration to include route for admin news management page at /admin/news",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hook-usesearchcontent-that-calls-the-backend-search-method-with-a-search-term-enabled-only-when-the-search-term-is-non-empty-minimum-2-characters-and-returns-unified-search-results-with-proper-typescript-typing-for-result-items-including-contenttype-id-title-preview-and-relevance-fields",
+      "title": "Create React Query hook useSearchContent that calls the backend search method with a search term, enabled only when the search term is non-empty (minimum 2 characters), and returns unified search results with proper TypeScript typing for result items including contentType, id, title, preview, and relevance fields.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-global-search-bar-component-to-the-navigation-header-component-that-includes-a-search-input-field-with-search-icon-debounced-search-input-500ms-delay-and-triggers-navigation-to-search-route-with-the-search-term-as-a-url-parameter-when-user-enters-a-search-query",
+      "title": "Add a global search bar component to the Navigation header component that includes a search input field with search icon, debounced search input (500ms delay), and triggers navigation to /search route with the search term as a URL parameter when user enters a search query.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-search-results-page-at-search-route-that-reads-the-search-term-from-url-query-parameters-displays-the-search-term-in-a-page-header-uses-usesearchcontent-hook-to-fetch-results-and-renders-a-loading-state-while-searching",
+      "title": "Create Search Results page at /search route that reads the search term from URL query parameters, displays the search term in a page header, uses useSearchContent hook to fetch results, and renders a loading state while searching.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-unified-search-results-on-the-search-results-page-grouped-by-content-type-products-videos-workouts-running-sessions-food-entries-news-articles-with-each-result-showing-the-item-title-preview-text-and-a-clickable-link-that-navigates-to-the-appropriate-detail-page-based-on-content-type-e-g-store-product-id-for-products-fitube-id-for-videos-news-id-for-news-articles",
+      "title": "Render unified search results on the Search Results page grouped by content type (Products, Videos, Workouts, Running Sessions, Food Entries, News Articles) with each result showing the item title, preview text, and a clickable link that navigates to the appropriate detail page based on content type (e.g., /store/product/:id for products, /fitube/:id for videos, /news/:id for news articles).",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-an-empty-state-message-on-the-search-results-page-when-no-results-are-found-for-the-search-term-with-a-helpful-message-encouraging-users-to-try-different-keywords-or-check-spelling",
+      "title": "Display an empty state message on the Search Results page when no results are found for the search term, with a helpful message encouraging users to try different keywords or check spelling.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-app-tsx-router-configuration-to-include-the-search-route-that-renders-the-search-results-page-component",
+      "title": "Update App.tsx router configuration to include the /search route that renders the Search Results page component.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hook-useexternalsearch-in-frontend-src-hooks-useexternalsearch-ts-that-calls-the-backend-external-search-method-with-a-search-term-enable-the-query-only-when-the-search-term-is-non-empty-and-at-least-2-characters-long-return-external-search-results-with-proper-typescript-typing-for-result-items-including-resulttype-title-preview-sourceurl-and-sourcename-fields",
+      "title": "Create React Query hook useExternalSearch in frontend/src/hooks/useExternalSearch.ts that calls the backend external search method with a search term. Enable the query only when the search term is non-empty and at least 2 characters long. Return external search results with proper TypeScript typing for result items including resultType, title, preview, sourceUrl, and sourceName fields.",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-search-results-page-frontend-src-pages-searchresults-tsx-to-display-both-internal-fit-amigo-search-results-and-external-web-search-results-on-the-same-page-use-the-useexternalsearch-hook-alongside-the-existing-usesearchcontent-hook-display-external-results-in-a-separate-section-with-clear-visual-distinction-from-internal-results-e-g-different-background-color-badge-indicating-external-result-or-separate-heading-each-external-result-should-show-the-title-preview-snippet-and-source-name-with-a-clickable-link-that-opens-the-source-url-in-a-new-tab",
+      "title": "Update the Search Results page (frontend/src/pages/SearchResults.tsx) to display both internal FIT AMIGO search results and external web search results on the same page. Use the useExternalSearch hook alongside the existing useSearchContent hook. Display external results in a separate section with clear visual distinction from internal results (e.g., different background color, badge indicating 'External Result', or separate heading). Each external result should show the title, preview/snippet, and source name with a clickable link that opens the source URL in a new tab.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-fitness-specific-search-api-including-environment-variable-placeholders-for-vite-fitness-search-api-url-and-vite-fitness-search-api-key-or-similar-naming-convention-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-the-go-store-api-configuration-instructions",
+      "title": "Add configuration instructions to frontend/README.md for the fitness-specific search API, including environment variable placeholders for VITE_FITNESS_SEARCH_API_URL and VITE_FITNESS_SEARCH_API_KEY (or similar naming convention). Document that these credentials need to be configured post-deployment, following the same pattern as the Go Store API configuration instructions.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-fitness-search-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-fitness-search-api-url-and-vite-fitness-search-api-key-following-the-same-pattern-as-the-existing-go-store-api-environment-variables",
+      "title": "Add fitness search API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_SEARCH_API_URL and VITE_FITNESS_SEARCH_API_KEY, following the same pattern as the existing Go Store API environment variables.",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hook-usegetexternalsportsproducts-in-frontend-src-hooks-usegetexternalsportsproducts-ts-that-calls-the-backend-method-to-fetch-external-sports-products-include-optional-category-filter-parameter-proper-typescript-typing-for-product-results-error-handling-and-enable-the-query-only-when-the-actor-is-available-follow-the-same-pattern-as-usegetexternalproducts-hook",
+      "title": "Create React Query hook useGetExternalSportsProducts in frontend/src/hooks/useGetExternalSportsProducts.ts that calls the backend method to fetch external sports products. Include optional category filter parameter, proper TypeScript typing for product results, error handling, and enable the query only when the actor is available. Follow the same pattern as useGetExternalProducts hook.",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-store-page-frontend-src-pages-store-tsx-to-display-external-sports-products-fetched-from-the-new-external-api-instead-of-or-alongside-the-existing-go-store-products-each-product-card-should-show-the-product-photo-name-price-and-a-button-link-that-opens-the-external-product-url-in-a-new-tab-remove-or-hide-internal-product-management-features-add-to-cart-for-external-products-include-category-filtering-for-gym-equipment-running-gear-sports-apparel-and-supplements",
+      "title": "Update the Store page (frontend/src/pages/Store.tsx) to display external sports products fetched from the new external API instead of or alongside the existing Go Store products. Each product card should show the product photo, name, price, and a button/link that opens the external product URL in a new tab. Remove or hide internal product management features (add to cart) for external products. Include category filtering for gym equipment, running gear, sports apparel, and supplements.",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hook-usegetexternalfitnessvideos-in-frontend-src-hooks-usegetexternalfitnessvideos-ts-that-calls-the-backend-method-to-fetch-external-sports-and-fitness-videos-include-proper-typescript-typing-for-video-results-error-handling-and-enable-the-query-only-when-the-actor-is-available-follow-the-pattern-of-existing-video-hooks",
+      "title": "Create React Query hook useGetExternalFitnessVideos in frontend/src/hooks/useGetExternalFitnessVideos.ts that calls the backend method to fetch external sports and fitness videos. Include proper TypeScript typing for video results, error handling, and enable the query only when the actor is available. Follow the pattern of existing video hooks.",
+      "reqIds": [
+        "REQ-61"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-fitube-page-frontend-src-pages-fitube-tsx-to-display-external-sports-and-fitness-videos-fetched-from-the-external-api-on-the-main-video-browsing-page-at-fitube-display-videos-in-a-grid-layout-showing-video-thumbnails-titles-uploader-names-and-view-counts-each-video-card-should-be-clickable-and-navigate-to-a-detail-view-or-open-the-external-video-url-maintain-the-existing-video-upload-functionality-for-internal-videos-if-needed-or-clearly-distinguish-between-internal-and-external-videos",
+      "title": "Update the FiTube page (frontend/src/pages/FiTube.tsx) to display external sports and fitness videos fetched from the external API on the main video browsing page at /fitube. Display videos in a grid layout showing video thumbnails, titles, uploader names, and view counts. Each video card should be clickable and navigate to a detail view or open the external video URL. Maintain the existing video upload functionality for internal videos if needed, or clearly distinguish between internal and external videos.",
+      "reqIds": [
+        "REQ-62"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-external-sports-products-api-including-environment-variable-placeholders-for-vite-sports-products-api-url-and-vite-sports-products-api-key-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-the-existing-go-store-api-and-fitness-search-api-configuration-instructions",
+      "title": "Add configuration instructions to frontend/README.md for the external sports products API, including environment variable placeholders for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as the existing Go Store API and Fitness Search API configuration instructions.",
+      "reqIds": [
+        "REQ-63"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-sports-products-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-sports-products-api-url-and-vite-sports-products-api-key-following-the-same-pattern-as-the-existing-go-store-api-and-fitness-search-api-environment-variables",
+      "title": "Add sports products API configuration to frontend/.env.example with placeholder values for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY, following the same pattern as the existing Go Store API and Fitness Search API environment variables.",
+      "reqIds": [
+        "REQ-64"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-external-fitness-videos-api-including-environment-variable-placeholders-for-vite-fitness-videos-api-url-and-vite-fitness-videos-api-key-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-other-external-api-configurations",
+      "title": "Add configuration instructions to frontend/README.md for the external fitness videos API, including environment variable placeholders for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as other external API configurations.",
+      "reqIds": [
+        "REQ-65"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-fitness-videos-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-fitness-videos-api-url-and-vite-fitness-videos-api-key-following-the-same-pattern-as-existing-external-api-environment-variables",
+      "title": "Add fitness videos API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY, following the same pattern as existing external API environment variables.",
+      "reqIds": [
+        "REQ-66"
       ],
       "version": 1
     }
@@ -49,27 +423,268 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Food Tracker with manual search and logging (Nutritionix API integration)",
+      "summary": "User authentication with Internet Identity",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Navigation structure connecting all platform sections",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-3",
+      "summary": "E-commerce store with product catalog, shopping cart, checkout, and order management",
       "reqIds": [],
       "status": "in_progress"
     },
     {
       "id": "AR-4",
-      "summary": "Implement backend methods to store food entries with fields for food name, calories, protein, carbs, fat, serving size, and timestamp, and retrieve all food entries for the authenticated user",
+      "summary": "Workout tracker for logging exercise sessions with sets, reps, and weights",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-5",
+      "summary": "FiTube video platform with embedded and uploaded videos, social features",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Running monitor with manual entry system for distance and duration",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Food tracker with camera reference, nutrition API, and macro tracking in grams",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Sports and fitness news section with articles",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Web search functionality",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Hybrid product catalog displaying both internal products (with Add to Cart) and external products from Go Store API (with View on Go Store button) on the same page",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Admin interface for managing internal product inventory (add, edit, delete products with images, pricing, descriptions, stock)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Go Store API integration to fetch and display external products with error handling",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Create a backend API endpoint to fetch external products from the Go Store API and return them to the frontend, including error handling for API failures",
       "reqIds": [
-        "REQ-3"
+        "REQ-10"
       ],
       "status": "pending"
     },
     {
-      "id": "AR-5",
-      "summary": "Integrate with Nutritionix API to search for foods by name and fetch detailed nutritional data including calories, protein, carbs, and fat in grams",
+      "id": "AR-15",
+      "summary": "Create backend data structures and methods in main.mo for storing and managing video entries with fields for video ID, title, description, video URL (for embedded videos), upload timestamp, uploader user ID, like count, and comment count",
       "reqIds": [
-        "REQ-4"
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Implement backend video upload functionality that accepts video file blobs, stores them using the existing blob storage pattern from product images, and returns a stable URL for the uploaded video",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Create backend data structures and methods for video likes, allowing users to like a video once, unlike it, and retrieve the total like count and whether the current user has liked a specific video",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Create backend data structures and methods for video comments, allowing users to add comments with text content, retrieve all comments for a video with commenter information and timestamps, and delete their own comments",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Create backend data structures and methods in main.mo for storing and managing running sessions with fields for run ID, user ID, distance (in kilometers or miles), duration (in minutes), date/timestamp, and optional notes",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Update Navigation component to include FiTube and Running links in the main navigation menu, ensuring they follow the existing navigation pattern and are accessible from both desktop and mobile menus",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Admin news management interface for creating, editing, and deleting articles with fields: title, content, author, publication date, category (workout tips, nutrition, sports news, etc.), and featured image",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Unified search functionality across all internal FIT AMIGO content (videos, products, workouts, runs, food logs, news articles) and external fitness news websites/APIs",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Create backend data structures and methods in main.mo for storing and managing news articles with fields for article ID, title, content, author, publication date, category (enum or text: workout tips, nutrition, sports news, etc.), featured image URL, article type (internal or external), external URL (optional, for external articles), creation timestamp, and user ID of the admin who created it",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Implement backend methods for creating news articles that accept title, content, author, publication date, category, featured image URL, article type (internal/external), and optional external URL, storing the article and returning the article ID",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Implement backend methods for updating existing news articles that accept article ID and updated fields (title, content, author, publication date, category, featured image URL, article type, external URL), with authorization check ensuring only admins can edit articles",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Implement backend methods for deleting news articles that accept article ID, with authorization check ensuring only admins can delete articles",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Implement backend methods for retrieving all news articles with optional category filtering, returning articles sorted by publication date (newest first)",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Implement backend method for retrieving a single news article by ID, returning all article details including content, metadata, and admin creator information",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Global search bar in navigation header for internal content search across all FIT AMIGO content (products, videos, workouts, runs, food logs, news articles)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "Create backend search method in main.mo that accepts a search term string and searches across all internal content types: products (name, description), videos (title, description), workouts (exercise name), running sessions (notes), food entries (food name), and news articles (title, content, author). Return unified search results with content type identifier, item ID, title/name, description/preview text, and relevance score.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-39",
+      "summary": "Create backend method to call fitness-specific external search API (configurable via environment variables) that accepts search term and returns external search results with fields: result type (news/workout/nutrition), title, preview/snippet, source URL, and source name",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Create React Query hook useExternalSearch that calls the backend external search method with a search term, enabled only when search term is non-empty (minimum 2 characters), returns external search results with proper TypeScript typing",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-41",
+      "summary": "Update Search Results page to display both internal and external results side-by-side or in grouped sections, with clear visual distinction between internal FIT AMIGO content and external web results, external results open in new tabs when clicked",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Add configuration instructions and environment variable placeholders for fitness-specific search API endpoint URL and credentials to be set post-deployment",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-43",
+      "summary": "Create backend method in main.mo to call fitness-specific external search API that accepts a search term string and returns external search results with fields: result type (news/workout/nutrition), title, preview/snippet, source URL, and source name. The API endpoint URL and credentials should be configurable via environment variables similar to the Go Store API pattern.",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-44",
+      "summary": "Update Store section to fetch and display external sports products (gym equipment, running gear, sports apparel, supplements) from external API with photos, prices, and external product links",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Update FiTube main page to automatically fetch and display sports/fitness videos from external API with thumbnails, titles, and metadata",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-46",
+      "summary": "Create backend method in main.mo to fetch external sports products (gym equipment, running gear, sports apparel, supplements) from a configurable external API endpoint. The method should accept optional category and search filters, call the external API with proper error handling, parse the JSON response, and return an array of products with fields: id, name, description, price, imageUrl, category, and externalProductUrl. Follow the same pattern as the existing fetchExternalProducts method for Go Store API.",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-49",
+      "summary": "Create backend method in main.mo to fetch sports and fitness videos from a configurable external video API endpoint. The method should call the external API with proper error handling, parse the JSON response, and return an array of videos with fields: id, title, description, thumbnailUrl, videoUrl (or embedUrl), uploader/channel name, view count, and duration. Follow similar patterns to existing external API integrations.",
+      "reqIds": [
+        "REQ-60"
       ],
       "status": "pending"
     }
   ],
+  "gameProjectType": "none",
   "projectName": "FIT AMIGO",
   "clarification_mode": "instant",
   "clarification_rounds": 0

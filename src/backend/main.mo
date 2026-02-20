@@ -1,16 +1,14 @@
 import Map "mo:core/Map";
 import List "mo:core/List";
-import Nat "mo:core/Nat";
-import Text "mo:core/Text";
-import Iter "mo:core/Iter";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
+import Text "mo:core/Text";
 import Time "mo:core/Time";
+import OutCall "http-outcalls/outcall";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
-import OutCall "http-outcalls/outcall";
 
 actor {
   let accessControlState = AccessControl.initState();
@@ -20,8 +18,22 @@ actor {
   type UserId = Principal;
   type ProductId = Nat;
   type OrderId = Nat;
+  type ArticleId = Nat;
+  type Transform = OutCall.Transform;
 
-  public type Product = {
+  type FoodEntry = {
+    id : Nat;
+    userId : Principal;
+    foodName : Text;
+    calories : Float;
+    protein : Float;
+    carbs : Float;
+    fat : Float;
+    servingSize : Float;
+    timestamp : Int;
+  };
+
+  type Product = {
     id : ProductId;
     name : Text;
     description : Text;
@@ -100,18 +112,6 @@ actor {
     timestamp : Int;
   };
 
-  public type FoodEntry = {
-    id : Nat;
-    userId : Principal;
-    foodName : Text;
-    calories : Float;
-    protein : Float;
-    carbs : Float;
-    fat : Float;
-    servingSize : Float;
-    timestamp : Int;
-  };
-
   public type FoodEntryInput = {
     foodName : Text;
     calories : Float;
@@ -119,6 +119,72 @@ actor {
     carbs : Float;
     fat : Float;
     servingSize : Float;
+  };
+
+  public type NewsCategory = {
+    #workoutTips;
+    #nutrition;
+    #sportsNews;
+    #trainingAdvice;
+    #productReviews;
+    #mentalHealth;
+    #fitnessLifestyle;
+  };
+
+  public type ArticleType = {
+    #internal;
+    #external;
+  };
+
+  public type NewsArticle = {
+    id : ArticleId;
+    title : Text;
+    content : Text;
+    author : Text;
+    publicationDate : Int;
+    category : NewsCategory;
+    featuredImageUrl : Text;
+    articleType : ArticleType;
+    externalUrl : ?Text;
+    creationTimestamp : Int;
+    creatorUserId : UserId;
+  };
+
+  public type NewsArticleInput = {
+    title : Text;
+    content : Text;
+    author : Text;
+    publicationDate : Int;
+    category : NewsCategory;
+    featuredImageUrl : Text;
+    articleType : ArticleType;
+    externalUrl : ?Text;
+  };
+
+  type ArticleSummary = {
+    id : ArticleId;
+    title : Text;
+    author : Text;
+    publicationDate : Int;
+    category : NewsCategory;
+    featuredImageUrl : Text;
+    articleType : ArticleType;
+  };
+
+  type RunningSessionSummary = {
+    runId : Nat;
+    distance : Float;
+    duration : Nat;
+    timestamp : Int;
+    notes : ?Text;
+  };
+
+  type ProductCategory = {
+    #clothing;
+    #equipment;
+    #supplements;
+    #trainingAids;
+    #accessories;
   };
 
   type NutritionixSearchResult = {
@@ -132,6 +198,43 @@ actor {
     nf_total_fat : Float;
   };
 
+  public type SearchResult = {
+    contentType : Text;
+    itemId : Nat;
+    title : Text;
+    previewText : Text;
+    relevanceScore : Float;
+  };
+
+  type FitnessExternalSearchResult = {
+    resultType : Text;
+    title : Text;
+    preview : Text;
+    sourceUrl : Text;
+    source : Text;
+  };
+
+  type SportsProduct = {
+    id : Text;
+    name : Text;
+    description : Text;
+    price : Float;
+    imageUrl : Text;
+    category : Text;
+    externalProductUrl : Text;
+  };
+
+  type VideoContent = {
+    id : Text;
+    title : Text;
+    description : Text;
+    thumbnailUrl : Text;
+    videoUrl : Text;
+    uploader : Text;
+    viewCount : ?Nat;
+    duration : Nat;
+  };
+
   let products = Map.empty<ProductId, Product>();
   let orders = Map.empty<OrderId, Order>();
   let carts = Map.empty<UserId, List.List<CartItem>>();
@@ -142,126 +245,44 @@ actor {
   var videoLikes = Map.empty<Nat, Map.Map<Principal, Bool>>();
   var comments = Map.empty<Nat, Comment>();
   var videoComments = Map.empty<Nat, List.List<Nat>>();
-
   var videoIdCounter = 0;
   var runningSessionIdCounter = 0;
   var commentIdCounter = 0;
-
+  var articles = Map.empty<ArticleId, NewsArticle>();
+  var articleIdCounter : ArticleId = 0;
   var foodEntries = Map.empty<Nat, FoodEntry>();
-  var foodEntryIdCounter = 0;
+  var foodEntryIdCounter : Nat = 0;
   var userFoodEntries = Map.empty<Principal, List.List<Nat>>();
+
+  let externalSportsProductsEndpoint = "https://workoutpuppy.com/api/marketplace";
+  let externalSportsVideosEndpoint = "https://workoutpuppy.com/api/youtube";
 
   public query ({ caller }) func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
     OutCall.transform(input);
   };
 
-  public func fetchExternalProducts() : async Text {
+  public shared ({ caller }) func fetchExternalProducts() : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can fetch external products");
+    };
     let url = "https://gostore.icp0.io/api/products";
     await OutCall.httpGetRequest(url, [], transform);
   };
 
-  public shared ({ caller }) func addProduct(productDetails : ProductDetails) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can add products");
-    };
-
-    let newProduct : Product = {
-      id = products.size();
-      name = productDetails.name;
-      description = productDetails.description;
-      price = productDetails.price;
-      quantity = productDetails.quantity;
-      image = productDetails.image;
-      isInternal = true;
-    };
-
-    products.add(newProduct.id, newProduct);
-  };
-
   public query ({ caller }) func searchProducts(searchTerm : Text) : async [Product] {
     let productsValues = products.values().toArray();
-    let iter = productsValues.values();
-    let mappedIter = iter.filter(func(product) { product.name.contains(#text searchTerm) or product.description.contains(#text searchTerm) });
-    mappedIter.toArray();
+    let filteredProducts = productsValues.filter(
+      func(product) {
+        product.name.contains(#text searchTerm) or product.description.contains(#text searchTerm);
+      }
+    );
+    filteredProducts;
   };
 
   public query ({ caller }) func getProduct(id : ProductId) : async Product {
     switch (products.get(id)) {
       case (null) { Runtime.trap("Product not found") };
       case (?product) { product };
-    };
-  };
-
-  public shared ({ caller }) func editProduct(id : ProductId, productDetails : ProductDetails) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can edit products");
-    };
-
-    switch (products.get(id)) {
-      case (null) { Runtime.trap("Product not found") };
-      case (?existing) {
-        let updatedProduct : Product = {
-          existing with
-          name = productDetails.name;
-          description = productDetails.description;
-          price = productDetails.price;
-          quantity = productDetails.quantity;
-          image = productDetails.image;
-        };
-        products.add(id, updatedProduct);
-      };
-    };
-  };
-
-  public shared ({ caller }) func deleteProduct(id : ProductId) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can delete products");
-    };
-
-    if (not products.containsKey(id)) {
-      Runtime.trap("Product not found");
-    };
-
-    products.remove(id);
-  };
-
-  public shared ({ caller }) func addToCart(item : CartItem) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can add items to cart");
-    };
-
-    let currentCart = switch (carts.get(caller)) {
-      case (null) { List.empty<CartItem>() };
-      case (?cart) { cart };
-    };
-
-    let existingItemIndex = currentCart.findIndex(func(cartItem) { cartItem.productId == item.productId });
-
-    switch (existingItemIndex) {
-      case (null) {
-        currentCart.add(item);
-      };
-      case (?index) {
-        let cartItem = currentCart.at(index);
-        let updatedItem = {
-          cartItem with
-          quantity = cartItem.quantity + item.quantity;
-        };
-        currentCart.put(index, updatedItem);
-      };
-    };
-
-    carts.add(caller, currentCart);
-  };
-
-  public query ({ caller }) func getCart() : async [CartItem] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view their cart");
-    };
-
-    switch (carts.get(caller)) {
-      case (null) { [] };
-      case (?cart) { cart.toArray() };
     };
   };
 
@@ -407,71 +428,9 @@ actor {
     newVideo.id;
   };
 
-  public query ({ caller }) func getVideo(id : Nat) : async ?Video {
-    videos.get(id);
-  };
-
   public query ({ caller }) func getAllVideos() : async [Video] {
     let valuesIter = videos.values();
     valuesIter.toArray();
-  };
-
-  public shared ({ caller }) func likeVideo(videoId : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can like videos");
-    };
-
-    switch (videos.get(videoId)) {
-      case (null) { Runtime.trap("Video not found") };
-      case (?video) {
-        let likes = switch (videoLikes.get(videoId)) {
-          case (null) { Map.empty<Principal, Bool>() };
-          case (?existingLikes) { existingLikes };
-        };
-
-        if (likes.containsKey(caller)) {
-          Runtime.trap("Already liked this video");
-        };
-
-        likes.add(caller, true);
-        videoLikes.add(videoId, likes);
-
-        let updatedVideo = {
-          video with
-          likeCount = video.likeCount + 1;
-        };
-        videos.add(videoId, updatedVideo);
-      };
-    };
-  };
-
-  public shared ({ caller }) func unlikeVideo(videoId : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can unlike videos");
-    };
-
-    switch (videos.get(videoId)) {
-      case (null) { Runtime.trap("Video not found") };
-      case (?video) {
-        let likes = switch (videoLikes.get(videoId)) {
-          case (null) { Runtime.trap("Video has no likes") };
-          case (?existingLikes) { existingLikes };
-        };
-
-        if (not likes.containsKey(caller)) {
-          Runtime.trap("Haven't liked this video");
-        };
-
-        likes.remove(caller);
-        videoLikes.add(videoId, likes);
-
-        let updatedVideo = {
-          video with
-          likeCount = if (video.likeCount > 0) { video.likeCount - 1 } else { 0 };
-        };
-        videos.add(videoId, updatedVideo);
-      };
-    };
   };
 
   public query ({ caller }) func hasLikedVideo(videoId : Nat) : async Bool {
@@ -492,43 +451,6 @@ actor {
     };
   };
 
-  public shared ({ caller }) func addComment(videoId : Nat, text : Text) : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can add comments");
-    };
-
-    switch (videos.get(videoId)) {
-      case (null) { Runtime.trap("Video not found") };
-      case (?video) {
-        let newComment : Comment = {
-          id = commentIdCounter;
-          videoId;
-          userId = caller;
-          text;
-          timestamp = 0;
-        };
-
-        comments.add(commentIdCounter, newComment);
-
-        let videoCommentList = switch (videoComments.get(videoId)) {
-          case (null) { List.empty<Nat>() };
-          case (?existingComments) { existingComments };
-        };
-        videoCommentList.add(commentIdCounter);
-        videoComments.add(videoId, videoCommentList);
-
-        let updatedVideo = {
-          video with
-          commentCount = video.commentCount + 1;
-        };
-        videos.add(videoId, updatedVideo);
-
-        commentIdCounter += 1;
-        newComment.id;
-      };
-    };
-  };
-
   public query ({ caller }) func getVideoComments(videoId : Nat) : async [Comment] {
     let commentIds = switch (videoComments.get(videoId)) {
       case (null) { return [] };
@@ -544,42 +466,6 @@ actor {
     };
 
     result.toArray();
-  };
-
-  public shared ({ caller }) func deleteComment(commentId : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can delete comments");
-    };
-
-    switch (comments.get(commentId)) {
-      case (null) { Runtime.trap("Comment not found") };
-      case (?comment) {
-        if (comment.userId != caller and not AccessControl.isAdmin(accessControlState, caller)) {
-          Runtime.trap("Unauthorized: Can only delete your own comments");
-        };
-
-        comments.remove(commentId);
-
-        let videoCommentList = switch (videoComments.get(comment.videoId)) {
-          case (null) { List.empty<Nat>() };
-          case (?existingComments) { existingComments };
-        };
-
-        let filteredComments = videoCommentList.filter(func(id) { id != commentId });
-        videoComments.add(comment.videoId, filteredComments);
-
-        switch (videos.get(comment.videoId)) {
-          case (null) {};
-          case (?video) {
-            let updatedVideo = {
-              video with
-              commentCount = if (video.commentCount > 0) { video.commentCount - 1 } else { 0 };
-            };
-            videos.add(comment.videoId, updatedVideo);
-          };
-        };
-      };
-    };
   };
 
   public shared ({ caller }) func logRunningSession(distance : Float, duration : Nat, notes : ?Text) : async Nat {
@@ -657,8 +543,6 @@ actor {
     };
   };
 
-  // Food & Nutrition Features
-
   public query ({ caller }) func getUserFoodEntries() : async [FoodEntry] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view food entries");
@@ -678,37 +562,6 @@ actor {
     };
 
     result.toArray();
-  };
-
-  public shared ({ caller }) func addFoodEntry(food : FoodEntryInput) : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can add food entries");
-    };
-
-    let now = Time.now();
-    let newEntry : FoodEntry = {
-      id = foodEntryIdCounter;
-      userId = caller;
-      foodName = food.foodName;
-      calories = food.calories;
-      protein = food.protein;
-      carbs = food.carbs;
-      fat = food.fat;
-      servingSize = food.servingSize;
-      timestamp = now;
-    };
-
-    foodEntries.add(foodEntryIdCounter, newEntry);
-
-    let currentUserEntries = switch (userFoodEntries.get(caller)) {
-      case (null) { List.empty<Nat>() };
-      case (?entries) { entries };
-    };
-    currentUserEntries.add(foodEntryIdCounter);
-    userFoodEntries.add(caller, currentUserEntries);
-
-    foodEntryIdCounter += 1;
-    newEntry.id;
   };
 
   public query ({ caller }) func getFoodEntry(entryId : Nat) : async ?FoodEntry {
@@ -784,5 +637,209 @@ actor {
         userFoodEntries.add(caller, filteredEntries);
       };
     };
+  };
+
+  public query ({ caller }) func getAllNewsArticles(categoryFilter : ?NewsCategory) : async [NewsArticle] {
+    let result = List.empty<NewsArticle>();
+    for ((_, article) in articles.entries()) {
+      switch (categoryFilter) {
+        case (null) { result.add(article) };
+        case (?filter) {
+          if (article.category == filter) { result.add(article) };
+        };
+      };
+    };
+
+    result.toArray();
+  };
+
+  public query ({ caller }) func getNewsArticle(articleId : ArticleId) : async ?NewsArticle {
+    articles.get(articleId);
+  };
+
+  public query ({ caller }) func getAllArticlesSortedByPublicationDate() : async [NewsArticle] {
+    let entries = articles.toArray();
+    let articlesArray = entries.map(func((_, article)) { article });
+    articlesArray;
+  };
+
+  public query ({ caller }) func getArticleSummaries() : async [ArticleSummary] {
+    let summaries = List.empty<ArticleSummary>();
+    for ((_, article) in articles.entries()) {
+      let summary : ArticleSummary = {
+        id = article.id;
+        title = article.title;
+        author = article.author;
+        publicationDate = article.publicationDate;
+        category = article.category;
+        featuredImageUrl = article.featuredImageUrl;
+        articleType = article.articleType;
+      };
+      summaries.add(summary);
+    };
+    summaries.toArray();
+  };
+
+  public query ({ caller }) func searchContent(searchTerm : Text) : async [SearchResult] {
+    let results = List.empty<SearchResult>();
+
+    // Search public content (products, videos, articles) - accessible to all
+    let productValues = products.values().toArray();
+    for (product in productValues.values()) {
+      if (product.name.contains(#text searchTerm) or product.description.contains(#text searchTerm)) {
+        let result : SearchResult = {
+          contentType = "product";
+          itemId = product.id;
+          title = product.name;
+          previewText = product.description;
+          relevanceScore = calculateRelevanceScore(product.name, product.description, searchTerm);
+        };
+        results.add(result);
+      };
+    };
+
+    let videoValues = videos.values().toArray();
+    for (video in videoValues.values()) {
+      if (video.title.contains(#text searchTerm) or video.description.contains(#text searchTerm)) {
+        let result : SearchResult = {
+          contentType = "video";
+          itemId = video.id;
+          title = video.title;
+          previewText = video.description;
+          relevanceScore = calculateRelevanceScore(video.title, video.description, searchTerm);
+        };
+        results.add(result);
+      };
+    };
+
+    let articleValues = articles.values().toArray();
+    for (article in articleValues.values()) {
+      if (article.title.contains(#text searchTerm) or article.content.contains(#text searchTerm) or article.author.contains(#text searchTerm)) {
+        let result : SearchResult = {
+          contentType = "article";
+          itemId = article.id;
+          title = article.title;
+          previewText = article.content;
+          relevanceScore = calculateRelevanceScore(article.title, article.content, searchTerm);
+        };
+        results.add(result);
+      };
+    };
+
+    // Search private content (workouts, running sessions, food entries) - only for authenticated users
+    if (AccessControl.hasPermission(accessControlState, caller, #user)) {
+      // Search user's own workouts
+      switch (workouts.get(caller)) {
+        case (null) {};
+        case (?userWorkouts) {
+          for (workout in userWorkouts.values()) {
+            if (workout.exerciseName.contains(#text searchTerm)) {
+              let result : SearchResult = {
+                contentType = "workout";
+                itemId = 0; // Workouts don't have IDs in current implementation
+                title = workout.exerciseName;
+                previewText = "Sets: " # Nat.toText(workout.sets) # ", Reps: " # Nat.toText(workout.reps);
+                relevanceScore = calculateRelevanceScore(workout.exerciseName, workout.exerciseName, searchTerm);
+              };
+              results.add(result);
+            };
+          };
+        };
+      };
+
+      // Search user's own running sessions
+      for ((_, session) in runningSessions.entries()) {
+        if (session.userId == caller) {
+          switch (session.notes) {
+            case (null) {};
+            case (?notes) {
+              if (notes.contains(#text searchTerm)) {
+                let result : SearchResult = {
+                  contentType = "runningSession";
+                  itemId = session.runId;
+                  title = "Running Session";
+                  previewText = notes;
+                  relevanceScore = calculateRelevanceScore("Running Session", notes, searchTerm);
+                };
+                results.add(result);
+              };
+            };
+          };
+        };
+      };
+
+      // Search user's own food entries
+      switch (userFoodEntries.get(caller)) {
+        case (null) {};
+        case (?entryIds) {
+          for (entryId in entryIds.values()) {
+            switch (foodEntries.get(entryId)) {
+              case (null) {};
+              case (?entry) {
+                if (entry.foodName.contains(#text searchTerm)) {
+                  let result : SearchResult = {
+                    contentType = "foodEntry";
+                    itemId = entry.id;
+                    title = entry.foodName;
+                    previewText = "Calories: " # Float.toText(entry.calories);
+                    relevanceScore = calculateRelevanceScore(entry.foodName, entry.foodName, searchTerm);
+                  };
+                  results.add(result);
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    results.toArray();
+  };
+
+  public shared ({ caller }) func getExternalFitnessSearchResults(searchTerm : Text) : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can perform external fitness searches");
+    };
+
+    let search_url = "https://external-fitness-api.icp0.io/api/search?query=" # searchTerm;
+    await OutCall.httpGetRequest(search_url, [], transform);
+  };
+
+  public shared ({ caller }) func fetchExternalSportsProducts(categoryFilter : ?Text, searchTerm : ?Text) : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can fetch external sports products");
+    };
+
+    let baseUrl = externalSportsProductsEndpoint;
+    var url = baseUrl;
+
+    switch (categoryFilter, searchTerm) {
+      case (?category, ?search) {
+        url #= "?category=" # category # "&search=" # search;
+      };
+      case (?category, null) {
+        url #= "?category=" # category;
+      };
+      case (null, ?search) {
+        url #= "?search=" # search;
+      };
+      case (null, null) {};
+    };
+
+    await OutCall.httpGetRequest(url, [], transform);
+  };
+
+  public shared ({ caller }) func fetchSportsAndFitnessVideos() : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can fetch sports and fitness videos");
+    };
+
+    await OutCall.httpGetRequest(externalSportsVideosEndpoint, [], transform);
+  };
+
+  func calculateRelevanceScore(title : Text, content : Text, searchTerm : Text) : Float {
+    let titleMatches = if (title.contains(#text searchTerm)) { 1.0 } else { 0.0 };
+    let contentMatches = if (content.contains(#text searchTerm)) { 1.0 } else { 0.0 };
+    0.7 * titleMatches + 0.3 * contentMatches;
   };
 };

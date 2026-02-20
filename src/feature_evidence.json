@@ -2,13 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-food-tracker-page-at-food-route-that-displays-a-food-diary-showing-all-logged-foods-with-nutritional-breakdown-calories-protein-carbs-fat-in-grams-and-a-daily-macro-tracking-summary-showing-total-calories-protein-carbs-and-fat",
-      "featureTitle": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
+      "featureId": "feature-create-react-query-hook-usegetexternalsportsproducts-in-frontend-src-hooks-usegetexternalsportsproducts-ts-that-calls-the-backend-method-to-fetch-external-sports-products-include-optional-category-filter-parameter-proper-typescript-typing-for-product-results-error-handling-and-enable-the-query-only-when-the-actor-is-available-follow-the-same-pattern-as-usegetexternalproducts-hook",
+      "featureTitle": "Create React Query hook useGetExternalSportsProducts in frontend/src/hooks/useGetExternalSportsProducts.ts that calls the backend method to fetch external sports products. Include optional category filter parameter, proper TypeScript typing for product results, error handling, and enable the query only when the actor is available. Follow the same pattern as useGetExternalProducts hook.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/FoodEntryCard.tsx",
-        "frontend/src/components/MacroSummaryCard.tsx",
-        "frontend/src/pages/FoodTracker.tsx"
+        "frontend/src/hooks/useGetExternalSportsProducts.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -21,16 +18,16 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-58"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-an-add-food-page-with-a-search-interface-where-users-can-search-for-foods-by-name-select-from-search-results-specify-serving-size-and-log-the-food-entry",
-      "featureTitle": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+      "featureId": "feature-update-the-store-page-frontend-src-pages-store-tsx-to-display-external-sports-products-fetched-from-the-new-external-api-instead-of-or-alongside-the-existing-go-store-products-each-product-card-should-show-the-product-photo-name-price-and-a-button-link-that-opens-the-external-product-url-in-a-new-tab-remove-or-hide-internal-product-management-features-add-to-cart-for-external-products-include-category-filtering-for-gym-equipment-running-gear-sports-apparel-and-supplements",
+      "featureTitle": "Update the Store page (frontend/src/pages/Store.tsx) to display external sports products fetched from the new external API instead of or alongside the existing Go Store products. Each product card should show the product photo, name, price, and a button/link that opens the external product URL in a new tab. Remove or hide internal product management features (add to cart) for external products. Include category filtering for gym equipment, running gear, sports apparel, and supplements.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/AddFood.tsx"
+        "frontend/src/components/ProductFilters.tsx",
+        "frontend/src/pages/Store.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -43,19 +40,15 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-59"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-react-query-hooks-for-food-operations-including-searching-foods-via-nutritionix-api-logging-food-entries-and-retrieving-user-s-food-diary",
-      "featureTitle": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "featureId": "feature-create-react-query-hook-usegetexternalfitnessvideos-in-frontend-src-hooks-usegetexternalfitnessvideos-ts-that-calls-the-backend-method-to-fetch-external-sports-and-fitness-videos-include-proper-typescript-typing-for-video-results-error-handling-and-enable-the-query-only-when-the-actor-is-available-follow-the-pattern-of-existing-video-hooks",
+      "featureTitle": "Create React Query hook useGetExternalFitnessVideos in frontend/src/hooks/useGetExternalFitnessVideos.ts that calls the backend method to fetch external sports and fitness videos. Include proper TypeScript typing for video results, error handling, and enable the query only when the actor is available. Follow the pattern of existing video hooks.",
       "files": [
-        "frontend/src/hooks/useDeleteFoodEntry.ts",
-        "frontend/src/hooks/useEditFoodEntry.ts",
-        "frontend/src/hooks/useGetFoodEntry.ts",
-        "frontend/src/hooks/useGetUserFoodEntries.ts",
-        "frontend/src/hooks/useLogFood.ts"
+        "frontend/src/hooks/useGetExternalFitnessVideos.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -68,15 +61,16 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-5"
+        "REQ-61"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-food-tracker-navigation-link-to-the-main-navigation-component-alongside-existing-features-store-fitube-workout-running",
-      "featureTitle": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+      "featureId": "feature-update-the-fitube-page-frontend-src-pages-fitube-tsx-to-display-external-sports-and-fitness-videos-fetched-from-the-external-api-on-the-main-video-browsing-page-at-fitube-display-videos-in-a-grid-layout-showing-video-thumbnails-titles-uploader-names-and-view-counts-each-video-card-should-be-clickable-and-navigate-to-a-detail-view-or-open-the-external-video-url-maintain-the-existing-video-upload-functionality-for-internal-videos-if-needed-or-clearly-distinguish-between-internal-and-external-videos",
+      "featureTitle": "Update the FiTube page (frontend/src/pages/FiTube.tsx) to display external sports and fitness videos fetched from the external API on the main video browsing page at /fitube. Display videos in a grid layout showing video thumbnails, titles, uploader names, and view counts. Each video card should be clickable and navigate to a detail view or open the external video URL. Maintain the existing video upload functionality for internal videos if needed, or clearly distinguish between internal and external videos.",
       "files": [
-        "frontend/src/components/Navigation.tsx"
+        "frontend/src/components/VideoCard.tsx",
+        "frontend/src/pages/FiTube.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -89,7 +83,91 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-6"
+        "REQ-62"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-external-sports-products-api-including-environment-variable-placeholders-for-vite-sports-products-api-url-and-vite-sports-products-api-key-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-the-existing-go-store-api-and-fitness-search-api-configuration-instructions",
+      "featureTitle": "Add configuration instructions to frontend/README.md for the external sports products API, including environment variable placeholders for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as the existing Go Store API and Fitness Search API configuration instructions.",
+      "files": [
+        "frontend/README.md"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-63"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-sports-products-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-sports-products-api-url-and-vite-sports-products-api-key-following-the-same-pattern-as-the-existing-go-store-api-and-fitness-search-api-environment-variables",
+      "featureTitle": "Add sports products API configuration to frontend/.env.example with placeholder values for VITE_SPORTS_PRODUCTS_API_URL and VITE_SPORTS_PRODUCTS_API_KEY, following the same pattern as the existing Go Store API and Fitness Search API environment variables.",
+      "files": [
+        "frontend/.env.example"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-64"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-configuration-instructions-to-frontend-readme-md-for-the-external-fitness-videos-api-including-environment-variable-placeholders-for-vite-fitness-videos-api-url-and-vite-fitness-videos-api-key-document-that-these-credentials-need-to-be-configured-post-deployment-following-the-same-pattern-as-other-external-api-configurations",
+      "featureTitle": "Add configuration instructions to frontend/README.md for the external fitness videos API, including environment variable placeholders for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY. Document that these credentials need to be configured post-deployment, following the same pattern as other external API configurations.",
+      "files": [
+        "frontend/README.md"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-65"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-fitness-videos-api-configuration-to-frontend-env-example-with-placeholder-values-for-vite-fitness-videos-api-url-and-vite-fitness-videos-api-key-following-the-same-pattern-as-existing-external-api-environment-variables",
+      "featureTitle": "Add fitness videos API configuration to frontend/.env.example with placeholder values for VITE_FITNESS_VIDEOS_API_URL and VITE_FITNESS_VIDEOS_API_KEY, following the same pattern as existing external API environment variables.",
+      "files": [
+        "frontend/.env.example"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-66"
       ],
       "confidence": "high"
     }

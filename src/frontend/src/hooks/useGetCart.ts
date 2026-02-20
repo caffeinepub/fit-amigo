@@ -11,7 +11,8 @@ export function useGetCart() {
     queryKey: ['cart'],
     queryFn: async () => {
       if (!actor) return [];
-      return actor.getCart();
+      // Backend method not yet implemented - return empty cart
+      return [];
     },
     enabled: !!actor && !actorFetching && !!identity,
   });

@@ -5,18 +5,24 @@ import { ShoppingCart, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { Product } from '../backend';
 import type { ExternalProduct } from '../types/ExternalProduct';
+import type { ExternalSportsProduct } from '../hooks/useGetExternalSportsProducts';
 
 interface ProductCardProps {
-  product: Product | ExternalProduct;
+  product: Product | ExternalProduct | ExternalSportsProduct;
   onAddToCart?: () => void;
 }
 
-function isExternalProduct(product: Product | ExternalProduct): product is ExternalProduct {
+function isExternalProduct(product: Product | ExternalProduct | ExternalSportsProduct): product is ExternalProduct | ExternalSportsProduct {
   return 'isExternal' in product && product.isExternal === true;
+}
+
+function isSportsProduct(product: Product | ExternalProduct | ExternalSportsProduct): product is ExternalSportsProduct {
+  return 'externalProductUrl' in product;
 }
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const isExternal = isExternalProduct(product);
+  const isSports = isSportsProduct(product);
 
   const getImageUrl = () => {
     if (isExternal) {
@@ -32,6 +38,16 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       : '/assets/generated/sports-equipment-placeholder.dim_400x400.png';
   };
 
+  const getExternalUrl = () => {
+    if (isSports) {
+      return product.externalProductUrl;
+    }
+    if ('externalUrl' in product) {
+      return product.externalUrl;
+    }
+    return 'https://workoutpuppy.com';
+  };
+
   const price = isExternal ? product.price : Number(product.price);
   const productId = isExternal ? product.id : product.id.toString();
 
@@ -41,11 +57,9 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
     }`}>
       {isExternal ? (
         <div className="aspect-square overflow-hidden bg-muted relative">
-          {isExternal && (
-            <Badge className="absolute top-2 right-2 z-10 bg-sunny-yellow text-black font-semibold">
-              External
-            </Badge>
-          )}
+          <Badge className="absolute top-2 right-2 z-10 bg-sunny-yellow text-black font-semibold">
+            External
+          </Badge>
           <img
             src={getImageUrl()}
             alt={product.name}
@@ -78,6 +92,9 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         {!isExternal && (
           <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
         )}
+        {isExternal && 'description' in product && product.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{product.description}</p>
+        )}
         <div className="flex items-center justify-between">
           <span className={`text-2xl font-bold ${isExternal ? 'text-sunny-yellow' : 'text-energetic-orange'}`}>
             ${price}
@@ -93,9 +110,9 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
             asChild
             className="w-full bg-sunny-yellow hover:bg-sunny-yellow/90 text-black font-semibold"
           >
-            <a href={product.externalUrl} target="_blank" rel="noopener noreferrer">
+            <a href={getExternalUrl()} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="mr-2 h-4 w-4" />
-              View on Go Store
+              View Product
             </a>
           </Button>
         ) : (

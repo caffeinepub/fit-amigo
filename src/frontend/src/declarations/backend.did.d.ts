@@ -10,6 +10,18 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export type ArticleId = bigint;
+export interface ArticleSummary {
+  'id' : ArticleId,
+  'title' : string,
+  'articleType' : ArticleType,
+  'author' : string,
+  'featuredImageUrl' : string,
+  'publicationDate' : bigint,
+  'category' : NewsCategory,
+}
+export type ArticleType = { 'internal' : null } |
+  { 'external' : null };
 export interface CartItem { 'productId' : ProductId, 'quantity' : bigint }
 export interface Comment {
   'id' : bigint,
@@ -38,6 +50,26 @@ export interface FoodEntryInput {
   'foodName' : string,
   'protein' : number,
 }
+export interface NewsArticle {
+  'id' : ArticleId,
+  'title' : string,
+  'content' : string,
+  'articleType' : ArticleType,
+  'creationTimestamp' : bigint,
+  'creatorUserId' : UserId,
+  'author' : string,
+  'featuredImageUrl' : string,
+  'publicationDate' : bigint,
+  'category' : NewsCategory,
+  'externalUrl' : [] | [string],
+}
+export type NewsCategory = { 'trainingAdvice' : null } |
+  { 'productReviews' : null } |
+  { 'fitnessLifestyle' : null } |
+  { 'mentalHealth' : null } |
+  { 'sportsNews' : null } |
+  { 'workoutTips' : null } |
+  { 'nutrition' : null };
 export interface Order {
   'id' : OrderId,
   'status' : OrderStatus,
@@ -60,13 +92,6 @@ export interface Product {
   'image' : [] | [ExternalBlob],
   'price' : bigint,
 }
-export interface ProductDetails {
-  'name' : string,
-  'description' : string,
-  'quantity' : bigint,
-  'image' : [] | [ExternalBlob],
-  'price' : bigint,
-}
 export type ProductId = bigint;
 export interface RunningSession {
   'duration' : bigint,
@@ -75,6 +100,13 @@ export interface RunningSession {
   'notes' : [] | [string],
   'timestamp' : bigint,
   'runId' : bigint,
+}
+export interface SearchResult {
+  'itemId' : bigint,
+  'title' : string,
+  'contentType' : string,
+  'relevanceScore' : number,
+  'previewText' : string,
 }
 export interface TransformationInput {
   'context' : Uint8Array,
@@ -140,24 +172,26 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
-  'addComment' : ActorMethod<[bigint, string], bigint>,
-  'addFoodEntry' : ActorMethod<[FoodEntryInput], bigint>,
-  'addProduct' : ActorMethod<[ProductDetails], undefined>,
-  'addToCart' : ActorMethod<[CartItem], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'deleteComment' : ActorMethod<[bigint], undefined>,
   'deleteFoodEntry' : ActorMethod<[bigint], undefined>,
-  'deleteProduct' : ActorMethod<[ProductId], undefined>,
   'deleteRunningSession' : ActorMethod<[bigint], undefined>,
   'editFoodEntry' : ActorMethod<[bigint, FoodEntryInput], undefined>,
-  'editProduct' : ActorMethod<[ProductId, ProductDetails], undefined>,
   'fetchExternalProducts' : ActorMethod<[], string>,
+  'fetchExternalSportsProducts' : ActorMethod<
+    [[] | [string], [] | [string]],
+    string
+  >,
+  'fetchSportsAndFitnessVideos' : ActorMethod<[], string>,
+  'getAllArticlesSortedByPublicationDate' : ActorMethod<[], Array<NewsArticle>>,
+  'getAllNewsArticles' : ActorMethod<[[] | [NewsCategory]], Array<NewsArticle>>,
   'getAllRunningSessions' : ActorMethod<[], Array<RunningSession>>,
   'getAllVideos' : ActorMethod<[], Array<Video>>,
+  'getArticleSummaries' : ActorMethod<[], Array<ArticleSummary>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
-  'getCart' : ActorMethod<[], Array<CartItem>>,
+  'getExternalFitnessSearchResults' : ActorMethod<[string], string>,
   'getFoodEntry' : ActorMethod<[bigint], [] | [FoodEntry]>,
+  'getNewsArticle' : ActorMethod<[ArticleId], [] | [NewsArticle]>,
   'getOrder' : ActorMethod<[OrderId], Order>,
   'getProduct' : ActorMethod<[ProductId], Product>,
   'getRunningSession' : ActorMethod<[bigint], [] | [RunningSession]>,
@@ -166,20 +200,18 @@ export interface _SERVICE {
   'getUserOrders' : ActorMethod<[], Array<Order>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'getUserRunningSessions' : ActorMethod<[], Array<RunningSession>>,
-  'getVideo' : ActorMethod<[bigint], [] | [Video]>,
   'getVideoComments' : ActorMethod<[bigint], Array<Comment>>,
   'getVideoLikeCount' : ActorMethod<[bigint], bigint>,
   'getWorkouts' : ActorMethod<[], Array<Workout>>,
   'hasLikedVideo' : ActorMethod<[bigint], boolean>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
-  'likeVideo' : ActorMethod<[bigint], undefined>,
   'logRunningSession' : ActorMethod<[number, bigint, [] | [string]], bigint>,
   'logWorkout' : ActorMethod<[Workout], undefined>,
   'placeOrder' : ActorMethod<[string], OrderId>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'searchContent' : ActorMethod<[string], Array<SearchResult>>,
   'searchProducts' : ActorMethod<[string], Array<Product>>,
   'transform' : ActorMethod<[TransformationInput], TransformationOutput>,
-  'unlikeVideo' : ActorMethod<[bigint], undefined>,
   'uploadVideo' : ActorMethod<[string, string, ExternalBlob], bigint>,
 }
 export declare const idlService: IDL.ServiceClass;

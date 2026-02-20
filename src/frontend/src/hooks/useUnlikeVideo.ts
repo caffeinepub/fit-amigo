@@ -8,7 +8,8 @@ export function useUnlikeVideo() {
   return useMutation({
     mutationFn: async (videoId: bigint) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.unlikeVideo(videoId);
+      // Backend method not yet implemented
+      throw new Error('unlikeVideo method not yet implemented in backend');
     },
     onSuccess: (_, videoId) => {
       queryClient.invalidateQueries({ queryKey: ['video', videoId.toString()] });

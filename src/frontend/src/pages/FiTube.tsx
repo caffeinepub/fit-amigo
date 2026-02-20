@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { useGetVideos } from '../hooks/useGetVideos';
+import { useGetExternalFitnessVideos } from '../hooks/useGetExternalFitnessVideos';
 import VideoCard from '../components/VideoCard';
 import { Button } from '@/components/ui/button';
 import { Plus, Video, Loader2 } from 'lucide-react';
@@ -7,7 +8,11 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 
 export default function FiTube() {
   const { identity } = useInternetIdentity();
-  const { data: videos = [], isLoading } = useGetVideos();
+  const { data: internalVideos = [], isLoading: internalLoading } = useGetVideos();
+  const { data: externalVideos = [], isLoading: externalLoading } = useGetExternalFitnessVideos();
+
+  const isLoading = internalLoading || externalLoading;
+  const allVideos = [...internalVideos, ...externalVideos];
 
   if (!identity) {
     return (
@@ -52,7 +57,7 @@ export default function FiTube() {
           </Link>
         </div>
 
-        {videos.length === 0 ? (
+        {allVideos.length === 0 ? (
           <div className="text-center py-20">
             <Video className="h-20 w-20 mx-auto mb-6 text-muted-foreground" />
             <p className="text-xl text-muted-foreground mb-6">No videos yet</p>
@@ -65,9 +70,11 @@ export default function FiTube() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {videos.map((video) => (
-              <VideoCard key={video.id.toString()} video={video} />
-            ))}
+            {allVideos.map((video) => {
+              const isExternal = 'isExternal' in video && video.isExternal;
+              const key = isExternal ? `ext-${video.id}` : `int-${video.id}`;
+              return <VideoCard key={key} video={video} />;
+            })}
           </div>
         )}
       </div>
