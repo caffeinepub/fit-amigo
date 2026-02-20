@@ -1,0 +1,151 @@
+{
+  "kind": "build_request",
+  "title": "Add Food Tracker with manual search and logging",
+  "projectName": "FIT AMIGO",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Food diary page showing all logged foods with nutritional breakdown",
+          "Daily macro tracking summary (total calories, protein, carbs, fat)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Food Tracker page is accessible at /food route",
+        "Page displays a list of all logged foods for the current user",
+        "Each food entry shows nutritional information: calories, protein (g), carbs (g), fat (g)",
+        "Daily summary section displays totals for calories, protein, carbs, and fat",
+        "Page requires authentication to access"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Food search interface where users can search for foods by name",
+          "Add food form to log meals with serving sizes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Add Food page includes a search input field for food names",
+        "Search results display foods with nutritional information from Nutritionix API",
+        "User can select a food from search results",
+        "User can specify serving size/quantity before logging",
+        "Logged food is saved and appears in the food diary",
+        "Page includes navigation back to the Food Tracker"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement backend methods to store food entries with fields for food name, calories, protein, carbs, fat, serving size, and timestamp, and retrieve all food entries for the authenticated user",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Backend methods for storing food entries"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend stores food entries with all required nutritional fields",
+        "Food entries are associated with the user's Principal",
+        "Backend provides a method to retrieve all food entries for a user",
+        "Food entries include timestamp for daily tracking",
+        "Backend follows the single-actor architecture pattern used in main.mo"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Integrate with Nutritionix API to search for foods by name and fetch detailed nutritional data including calories, protein, carbs, and fat in grams",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "Integration with Nutritionix API to fetch nutritional data (calories, protein, carbs, fat in grams)",
+          "Backend methods for making Nutritionix API calls"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend can make HTTP requests to Nutritionix API for food search",
+        "Search returns foods with nutritional information (calories, protein, carbs, fat)",
+        "API integration handles authentication with Nutritionix API credentials",
+        "Error handling for API failures or invalid responses"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "React Query hooks for food operations"
+        ]
+      },
+      "acceptanceCriteria": [
+        "useSearchFoods hook for searching foods by name",
+        "useLogFood mutation hook for adding food entries",
+        "useGetFoodDiary query hook for retrieving logged foods",
+        "Hooks follow the existing pattern in frontend/src/hooks directory",
+        "Query invalidation occurs after successful mutations"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "This simplified version will get the Food Tracker working",
+          "integrate seamlessly with your existing FIT AMIGO navigation"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Food link appears in the main navigation menu",
+        "Link is visible in both desktop and mobile views",
+        "Navigation follows existing pattern in Navigation.tsx",
+        "Link routes to /food page"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not implement AI camera-based food recognition - only manual search and logging",
+    "Follow the single-actor architecture pattern in backend/main.mo",
+    "Use React Query for all data fetching operations",
+    "Maintain consistency with existing FIT AMIGO navigation and visual theme",
+    "Do not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
+  ],
+  "nonGoals": [
+    "AI-powered food recognition from camera photos",
+    "Image upload functionality for foods",
+    "Barcode scanning",
+    "Meal planning features",
+    "Recipe management",
+    "Social sharing of meals",
+    "Advanced nutritional analytics or charts"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add Food Tracker with manual search and logging",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown and a daily macro tracking summary",
+      "acceptanceCriteria": [
+        "Food Tracker page is accessible at /food route",
+        "Page displays a list of all logged foods for the current user",
+        "Each food entry shows nutritional information: calories, protein (g), carbs (g), fat (g)",
+        "Daily summary section displays totals for calories, protein, carbs, and fat",
+        "Page requires authentication to access"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/FoodTracker.tsx",
+          "operation": "create",
+          "description": "Create the main Food Tracker page component that displays the user's food diary with logged food entries and daily macro summary. The page retrieves food entries using the useGetUserFoodEntries hook and calculates daily totals for calories, protein, carbs, and fat. Include authentication check using useInternetIdentity to ensure only logged-in users can access. Display food entries in a card or table layout showing food name, serving size, and nutritional breakdown. Add a prominent button to navigate to /food/add for logging new foods. Show loading and empty states appropriately."
+        },
+        {
+          "path": "frontend/src/components/FoodEntryCard.tsx",
+          "operation": "create",
+          "description": "Create a reusable component for displaying individual food entries in the food diary. Show food name, serving size, timestamp, and nutritional information (calories, protein in grams, carbs in grams, fat in grams) in a card layout. Include edit and delete buttons for each entry that trigger the respective mutations. Use icons from lucide-react for visual clarity (e.g., Utensils icon for food, Trash for delete, Edit for edit)."
+        },
+        {
+          "path": "frontend/src/components/MacroSummaryCard.tsx",
+          "operation": "create",
+          "description": "Create a component that displays the daily macro tracking summary. Accept an array of food entries as props and calculate totals for calories, protein (g), carbs (g), and fat (g). Display these totals in a prominent card with visual indicators (progress bars or circular charts optional). Use a grid or flex layout to organize the macro totals clearly."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add the /food route to the TanStack Router configuration to render the FoodTracker page component. Ensure the route follows the existing pattern used for other feature routes like /fitube, /workout, and /running."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+      "acceptanceCriteria": [
+        "Add Food page includes a search input field for food names",
+        "Search results display foods with nutritional information from Nutritionix API",
+        "User can select a food from search results",
+        "User can specify serving size/quantity before logging",
+        "Logged food is saved and appears in the food diary",
+        "Page includes navigation back to the Food Tracker"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AddFood.tsx",
+          "operation": "create",
+          "description": "Create the Add Food page component with a search interface for finding foods. Include a search input field that triggers the useSearchFoods hook with debouncing (300-500ms) to search the Nutritionix API via the backend. Display search results in a list or grid showing food name and nutritional information. When a user selects a food from results, show a form to specify serving size/quantity. Include a submit button that calls the useLogFood mutation hook to save the food entry. Add a back button or link to navigate to /food. Show loading states during search and submission, and handle empty results appropriately."
+        },
+        {
+          "path": "frontend/src/components/FoodSearchResults.tsx",
+          "operation": "create",
+          "description": "Create a component that displays search results from the food search query. Accept an array of food search results as props and render them in a clickable list or grid. Each result card should show food name, calories, protein, carbs, and fat. Include an onClick handler that allows the parent component to handle food selection. Show a message when no results are found."
+        },
+        {
+          "path": "frontend/src/components/ServingSizeForm.tsx",
+          "operation": "create",
+          "description": "Create a form component for specifying serving size when logging a food entry. Accept the selected food data as props and include an input field for serving size (numeric with unit label, e.g., grams or servings). Display the nutritional information that will be logged based on the serving size entered. Include a submit button that calls the onSubmit handler passed from the parent. Use react-hook-form for form validation to ensure serving size is a positive number."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add the /food/add route to the TanStack Router configuration to render the AddFood page component. Ensure the route follows the existing nested route pattern used for other feature sub-pages."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "acceptanceCriteria": [
+        "useSearchFoods hook for searching foods by name",
+        "useLogFood mutation hook for adding food entries",
+        "useGetFoodDiary query hook for retrieving logged foods",
+        "Hooks follow the existing pattern in frontend/src/hooks directory",
+        "Query invalidation occurs after successful mutations"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useSearchFoods.ts",
+          "operation": "create",
+          "description": "Create a React Query hook for searching foods by name via the Nutritionix API through the backend. Accept a search term string parameter and use useQuery to call the backend searchFoods method (the backend will handle the Nutritionix API outcall). Enable the query only when the search term is non-empty and has at least 2 characters. Parse the JSON response returned from the backend and transform it into a usable format for the frontend. Return the query result with isLoading, error, and data states. Follow the existing hook pattern used in useGetProduct.ts and useSearchProducts.ts."
+        },
+        {
+          "path": "frontend/src/hooks/useLogFood.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook for logging a food entry. Use useMutation to call the backend addFoodEntry method with FoodEntryInput parameters (foodName, calories, protein, carbs, fat, servingSize). On success, invalidate the 'userFoodEntries' query key to refresh the food diary. Follow the existing mutation pattern used in useLogWorkout.ts and useLogRunningSession.ts. Include error handling and return the mutation result with mutate, isLoading, and error states."
+        },
+        {
+          "path": "frontend/src/hooks/useGetUserFoodEntries.ts",
+          "operation": "create",
+          "description": "Create a React Query hook for retrieving the authenticated user's food entries. Use useQuery to call the backend getUserFoodEntries method with the query key 'userFoodEntries'. Enable the query only when the actor is available and the user is authenticated. Return the query result with isLoading, error, and data states. Follow the existing pattern used in useGetUserRunningSessions.ts and useGetWorkouts.ts."
+        },
+        {
+          "path": "frontend/src/hooks/useDeleteFoodEntry.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook for deleting a food entry by ID. Use useMutation to call the backend deleteFoodEntry method with the entry ID parameter. On success, invalidate the 'userFoodEntries' query key to refresh the food diary. Follow the existing mutation pattern used in useDeleteRunningSession.ts. Include error handling and return the mutation result."
+        },
+        {
+          "path": "frontend/src/hooks/useEditFoodEntry.ts",
+          "operation": "create",
+          "description": "Create a React Query mutation hook for editing an existing food entry. Use useMutation to call the backend editFoodEntry method with entry ID and FoodEntryInput parameters. On success, invalidate the 'userFoodEntries' query key to refresh the food diary. Follow the existing mutation pattern used in useEditProduct.ts. Include error handling and return the mutation result."
+        },
+        {
+          "path": "frontend/src/hooks/useGetFoodEntry.ts",
+          "operation": "create",
+          "description": "Create a React Query hook for retrieving a specific food entry by ID. Use useQuery to call the backend getFoodEntry method with the entry ID parameter. Enable the query only when the actor is available and the entry ID is provided. Return the query result with isLoading, error, and data states. Follow the existing pattern used in useGetProduct.ts and useGetVideo.ts. This hook supports editing functionality."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add Food Tracker navigation link to the main Navigation component alongside existing features",
+      "acceptanceCriteria": [
+        "Food link appears in the main navigation menu",
+        "Link is visible in both desktop and mobile views",
+        "Navigation follows existing pattern in Navigation.tsx",
+        "Link routes to /food page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Navigation.tsx",
+          "operation": "modify",
+          "description": "Add a 'Food' navigation link to the main navigation menu that routes to /food. Insert the link in the desktop navigation list between 'Running' and 'News' to maintain logical feature grouping. Also add the link to the mobile navigation menu in the same relative position. Use the Utensils icon from lucide-react for the Food link to maintain visual consistency with other navigation items. Follow the existing Link component pattern used for Store, FiTube, Workout, and Running."
+        }
+      ]
+    }
+  ]
+}

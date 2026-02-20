@@ -1,0 +1,118 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-20T11:13:40.880Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 6,
+    "implemented": 4,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/FoodTracker.tsx",
+          "frontend/src/components/FoodEntryCard.tsx",
+          "frontend/src/components/MacroSummaryCard.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/FoodTracker.tsx",
+          "frontend/src/components/FoodEntryCard.tsx",
+          "frontend/src/components/MacroSummaryCard.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/AddFood.tsx",
+          "frontend/src/components/FoodSearchResults.tsx",
+          "frontend/src/components/ServingSizeForm.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AddFood.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Implement backend methods to store food entries with fields for food name, calories, protein, carbs, fat, serving size, and timestamp, and retrieve all food entries for the authenticated user",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Integrate with Nutritionix API to search for foods by name and fetch detailed nutritional data including calories, protein, carbs, and fat in grams",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useSearchFoods.ts",
+          "frontend/src/hooks/useLogFood.ts",
+          "frontend/src/hooks/useGetUserFoodEntries.ts",
+          "frontend/src/hooks/useDeleteFoodEntry.ts",
+          "frontend/src/hooks/useEditFoodEntry.ts",
+          "frontend/src/hooks/useGetFoodEntry.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useLogFood.ts",
+          "frontend/src/hooks/useGetUserFoodEntries.ts",
+          "frontend/src/hooks/useDeleteFoodEntry.ts",
+          "frontend/src/hooks/useEditFoodEntry.ts",
+          "frontend/src/hooks/useGetFoodEntry.ts"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Navigation.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Navigation.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/FoodEntryCard.tsx",
+    "frontend/src/components/MacroSummaryCard.tsx",
+    "frontend/src/components/Navigation.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useDeleteFoodEntry.ts",
+    "frontend/src/hooks/useEditFoodEntry.ts",
+    "frontend/src/hooks/useGetFoodEntry.ts",
+    "frontend/src/hooks/useGetUserFoodEntries.ts",
+    "frontend/src/hooks/useLogFood.ts",
+    "frontend/src/pages/AddFood.tsx",
+    "frontend/src/pages/FoodTracker.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

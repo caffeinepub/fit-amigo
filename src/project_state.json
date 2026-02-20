@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "FIT AMIGO fitness platform with FiTube (video platform), Running Monitor (GPS tracking), and Food Tracker (manual search and logging with Nutritionix API)",
+  "architectural_notes": [
+    "Nutritionix API integration for nutritional data lookup",
+    "Food diary system with daily macro tracking (calories, protein, carbs, fat)",
+    "Manual food search and logging functionality",
+    "Food Tracker accessible at /food route"
+  ],
+  "known_issues": [
+    "AI camera-based food recognition deferred to future phase due to complexity"
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-food-tracker-page-at-food-route-that-displays-a-food-diary-showing-all-logged-foods-with-nutritional-breakdown-calories-protein-carbs-fat-in-grams-and-a-daily-macro-tracking-summary-showing-total-calories-protein-carbs-and-fat",
+      "title": "Create a Food Tracker page at /food route that displays a food diary showing all logged foods with nutritional breakdown (calories, protein, carbs, fat in grams) and a daily macro tracking summary showing total calories, protein, carbs, and fat",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-add-food-page-with-a-search-interface-where-users-can-search-for-foods-by-name-select-from-search-results-specify-serving-size-and-log-the-food-entry",
+      "title": "Create an Add Food page with a search interface where users can search for foods by name, select from search results, specify serving size, and log the food entry",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hooks-for-food-operations-including-searching-foods-via-nutritionix-api-logging-food-entries-and-retrieving-user-s-food-diary",
+      "title": "Create React Query hooks for food operations including searching foods via Nutritionix API, logging food entries, and retrieving user's food diary",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-food-tracker-navigation-link-to-the-main-navigation-component-alongside-existing-features-store-fitube-workout-running",
+      "title": "Add Food Tracker navigation link to the main Navigation component alongside existing features (Store, FiTube, Workout, Running)",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Food Tracker with manual search and logging (Nutritionix API integration)",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Implement backend methods to store food entries with fields for food name, calories, protein, carbs, fat, serving size, and timestamp, and retrieve all food entries for the authenticated user",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Integrate with Nutritionix API to search for foods by name and fetch detailed nutritional data including calories, protein, carbs, and fat in grams",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "FIT AMIGO",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
